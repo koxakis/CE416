@@ -1,9 +1,9 @@
-APP = test
+APP = Application
 CC=g++
 CLEANBROKEN = '1'
-LIBS = -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lGLU -lglfw -lXxf86vm -lXinerama -lXcursor -lglad
+LIBS = -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lGLU -Lusr/lib/libGLEW.so -lGLEW -lglfw -lXxf86vm -lXinerama -lXcursor
 #LIBS = -lGAEW -lglfw -lGL -L/run/media/nikolas/Linux_Data/Git_Repos/glfw/include/GLFW/glfw3.h
-SRC = test.cpp
+SRC = Application.cpp
 OBJ = $(SRC:.ccp=.o)
 
 all: build
@@ -17,4 +17,4 @@ $(APP): $(OBJ)
 	$(CC) $< $(DEPS) $(LIBS) -c -o $@ 
 
 clean:
-	rm -rf test *.o
+	rm -rf Application *.o
