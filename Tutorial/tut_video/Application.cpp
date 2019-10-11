@@ -153,7 +153,7 @@ int main(void)
 	glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
 	/* Enable of the generic vertex atribioute */
-	//glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(0);
 
 	// stopped at writing a shader in openGL 24:32
 	std::string vertexShader =
@@ -172,7 +172,7 @@ int main(void)
 			glClear(GL_COLOR_BUFFER_BIT);
 			
 			/* Simple legacy-Immidiade mode OpenGL */
-			legacy_triangles();
+			//legacy_triangles();
 
 			/* Issue a draw call for the above buffer */
 			/* glDrawArrays when you don't have index buffer */

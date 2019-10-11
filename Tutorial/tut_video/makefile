@@ -1,8 +1,7 @@
 APP = Application
 CC=g++
 CLEANBROKEN = '1'
-LIBS = -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lGLU -Lusr/lib/libGLEW.so -lGLEW -lglfw -lXxf86vm -lXinerama -lXcursor
-#LIBS = -lGAEW -lglfw -lGL -L/run/media/nikolas/Linux_Data/Git_Repos/glfw/include/GLFW/glfw3.h
+LIBS = -lGL -lX11 -lpthread -lXrandr -lXi -ldl -Lusr/lib/libGLEW.so -lGLEW -lglfw -lXxf86vm -lXinerama -lXcursor
 SRC = Application.cpp
 OBJ = $(SRC:.ccp=.o)
 
