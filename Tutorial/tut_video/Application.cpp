@@ -49,7 +49,7 @@ static unsigned int CompileShader(unsigned int type, const std::string& source)
 
 	/* This returns pointer to the begining of the data */
 	/* Source needs to exists, if source goes out of scope 
-			this will return garbage												*/
+			this will return garbage					*/
 	const char* src = source.c_str();
 
 	/* Point to source character data */
