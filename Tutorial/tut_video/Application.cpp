@@ -6,13 +6,21 @@
 #include <string>
 #include <sstream>
 /* position data for the buffer */
-float positions[6] =
+/* There were memory duplications index buffer solves this */
+float positions[] =
 {
-	-0.5f, -0.5f,
-	 0.0f, 0.5f,
-	 0.5f, -0.5f
+	-0.5f, -0.5f, //0
+	 0.5f, -0.5f, //1
+	 0.5f, 0.5f,  //2
+	 -0.5f, 0.5f  //3
 };
 
+/* Represent the order of vertex */
+unsigned int indices[] =
+{
+	0, 1, 2,
+	2, 3, 0
+};
 /* Struct in order to return multiple string codes for shaders */
 struct ShaderProgamSource
 {
@@ -206,7 +214,7 @@ int main(void)
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
-	/* Move glew init as per doc after we have a valid openGL context*/
+	/* Move glew init as per doc after we have a valid openGL context */
 	if (glewInit() != GLEW_OK)
 		{
 			std::cout << "Error in GlewIinit()";
@@ -228,13 +236,20 @@ int main(void)
 
 	/* Provide the buffer with data */
 	/* You can provide the data later if need be */
-	glBufferData( GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+	/* If something changes in position data updade the size accordingly */ 
+	glBufferData( GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
 
 	/* Define a vertex attribute */
 	glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 
 	/* Enable of the generic vertex attribute */
 	glEnableVertexAttribArray(0);
+
+	/* Index array stuff */
+	unsigned int ibo;
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
 	/* Read file from source */
 	ShaderProgamSource source = ParseShader("res/shaders/Shader_basic.shader");
@@ -257,7 +272,9 @@ int main(void)
 			/* Issue a draw call for the above buffer */
 			/* glDrawArrays when you don't have index buffer */
 			/* glDrawElements when you have index buffer */
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			/* If something changes the amount of data to be drawn */ 
+			//glDrawArrays(GL_TRIANGLES, 0, 6);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 			/* A Shader is a program that runs on the GPU gets the data from buffer ( GPU VRAM ) */
 	
