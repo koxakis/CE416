@@ -2,6 +2,9 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 /* position data for the buffer */
 float positions[6] =
 {
@@ -9,6 +12,54 @@ float positions[6] =
 	 0.0f, 0.5f,
 	 0.5f, -0.5f
 };
+
+/* Struct in order to return multiple string codes for shaders */
+struct ShaderProgamSource
+{
+	std::string VertextSource;
+	std::string FragmetSource;
+};
+
+/* Open the file with the shader code in */
+static ShaderProgamSource ParseShader(const std::string& filepath)
+{
+	/* Open the file with a modern C++ way */
+	std::ifstream stream(filepath);
+
+	enum class ShaderType
+		{
+			NONE = -1, VERTEX = 0, FRAGMENT = 1
+		};
+
+	std::string line;
+	std::stringstream ss[2];
+	ShaderType type = ShaderType::NONE;
+	/* Read the file line by line */
+	while (getline(stream, line))
+		{
+			/* If the line contains the #shader token with npos(invalid string position) */
+			if (line.find("#shader") != std::string::npos)
+				{
+					if (line.find("vertex") != std::string::npos)
+						{
+							/* Set mode to vertex */
+							type = ShaderType::VERTEX;
+						}
+					else if (line.find("fragment") != std::string::npos)
+						{
+							/* Set mode to fragment */
+							type = ShaderType::FRAGMENT;
+						}
+				}
+			else
+				{
+					/* Use an int casted index for array */
+					ss[(int)type] << line << "\n";
+				}
+		}
+
+	return { ss[0].str(), ss[1].str() };
+}
 
 void legacy_triangles()
 {
@@ -185,30 +236,11 @@ int main(void)
 	/* Enable of the generic vertex attribute */
 	glEnableVertexAttribArray(0);
 
-	/* String code for vertex shader */
-	std::string vertexShader =
-		"#version 460 core\n"
-		"\n"
-		"layout(location = 0) in vec4 position;\n"
-		"\n"
-		"void main()\n"
-		"{\n"
-		"	gl_Position = position;\n"
-		"}\n";
+	/* Read file from source */
+	ShaderProgamSource source = ParseShader("res/shaders/Shader_basic.shader");
 
-	/* String code for vertex shader */
-	std::string fragmentShader =
-		"#version 460 core\n"
-		"\n"
-		"layout(location = 0) out vec4 colour;\n"
-		"\n"
-		"void main()\n"
-		"{\n"
-		"	colour = vec4(1.0, 1.0, 0.0, 1.0);\n"
-		"}\n";
-	
 	/* Create shader using the above code */
-	unsigned int shader = CreateShader(vertexShader, fragmentShader);
+	unsigned int shader = CreateShader(source.VertextSource, source.FragmetSource);
 
 	/* Bind shader */
 	glUseProgram(shader);
