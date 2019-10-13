@@ -5,6 +5,65 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+
+/* Asserts if the return was false and lunches debug break */
+/* This works on windows - TODO build linux equivalent */
+/*
+#define ASSERT(x) if (!(x)) __debugbreak();
+#define GLCall(x) GLClearError();\
+	x;\
+	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+*/
+
+/* Keep reading and clearing OpenGL error flags */
+/* A more modern approach is glDebugMessageCallback */
+static void GLClearError()
+{
+	while (glGetError() != GL_NO_ERROR)
+		{	
+		}
+}
+
+/* Keep reading errors and display them */
+/* In order to search for an error code convert to hex and look in glew.h */
+static bool GLLogCall(const char* function, const char* file, int line)
+{
+	
+	while ( GLenum currentError = glGetError() )
+		{
+			std::cout << "[OpenGL ERROR] (" << currentError << ") from function: " 
+				<< function << " in file " << file << " at line " << line << std::endl;
+			return false;
+		}
+	return true;
+}
+
+/* Keep reading errors and display them */
+/* In order to search for an error code convert to hex and look in glew.h */
+static void GLLogCall_linux(const char* function, const char* file, int line)
+{
+	GLenum previousError = GL_NO_ERROR;
+	GLenum currentError;
+	
+	while ( (currentError = glGetError()) != GL_NO_ERROR )
+		{
+			if ( currentError != previousError )
+				{
+					previousError = currentError;
+					std::cout << "[OpenGL ERROR] (" << currentError << ") from function: " 
+						<< function << " in file " << file << " at line " << line << std::endl;
+					continue;
+				}
+			else
+				{
+					break;
+				}
+				
+			//return false;
+		}
+	//return true;
+}
+
 /* position data for the buffer */
 /* There were memory duplications index buffer solves this */
 float positions[] =
@@ -65,7 +124,7 @@ static ShaderProgamSource ParseShader(const std::string& filepath)
 					ss[(int)type] << line << "\n";
 				}
 		}
-
+	/* Return the table with the shader codes */
 	return { ss[0].str(), ss[1].str() };
 }
 
@@ -108,7 +167,7 @@ static unsigned int CompileShader(unsigned int type, const std::string& source)
 
 	/* This returns pointer to the begining of the data */
 	/* Source needs to exists, if source goes out of scope 
-			this will return garbage					*/
+			this will return garbage												*/
 	const char* src = source.c_str();
 
 	/* Point to source character data */
@@ -269,12 +328,24 @@ int main(void)
 			/* Simple legacy-Immidiade mode OpenGL */
 			//legacy_triangles();
 
+			/* Always clear errors before calling an openGL function */
+			/* Called from macro above */
+			GLClearError();
+
 			/* Issue a draw call for the above buffer */
 			/* glDrawArrays when you don't have index buffer */
 			/* glDrawElements when you have index buffer */
 			/* If something changes the amount of data to be drawn */ 
 			//glDrawArrays(GL_TRIANGLES, 0, 6);
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+			/* Windows calling the macro in order to clear and check for errors */
+			//GLCall(glDrawElements(GL_TRIANGLES, 6, GL_INT, nullptr));
+			glDrawElements(GL_TRIANGLES, 6, GL_INT, nullptr);
+
+			/* Check for errors after openGL call */
+			/* Called from macro above */
+			//ASSERT(GLLogCall());
+			GLLogCall("glDrawElements", __FILE__, __LINE__);
 
 			/* A Shader is a program that runs on the GPU gets the data from buffer ( GPU VRAM ) */
 	
