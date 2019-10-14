@@ -315,8 +315,8 @@ int main(void)
 			//glDrawArrays(GL_TRIANGLES, 0, 6);
 
 			/* Calling the macro in order to clear and check for errors */
-			GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-			//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+			//GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 			/* A Shader is a program that runs on the GPU gets the data from buffer ( GPU VRAM ) */
 	
