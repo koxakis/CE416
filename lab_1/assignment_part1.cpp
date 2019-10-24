@@ -79,6 +79,8 @@ int main(int argc, char** argv)
 			
 			/* INSERT HERE  */
 			display();
+
+			reshape(0,0);
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
 			/* Poll for and process events */
