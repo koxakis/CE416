@@ -1,7 +1,8 @@
 # Prerequisites
 *.d
 Application
-
+app
+App
 # Compiled Object files
 *.slo
 *.lo
