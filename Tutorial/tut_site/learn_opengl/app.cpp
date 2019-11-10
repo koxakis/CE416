@@ -52,7 +52,7 @@ int main()
 	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
 
 	/* build and compile our shader program */
-	Shader ourShader("fragment_shader.fs", "vertex_shader.vs"); 
+  Shader ourShader("shader.vs", "shader.fs");
 	/* you can name your shader files however you like */
 
 	/* Set up vertex data (and buffer(s)) and configure vertex attributes */
