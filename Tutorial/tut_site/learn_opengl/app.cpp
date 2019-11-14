@@ -16,7 +16,7 @@ int main()
 		}
 
 	/* Adding extra openGL options and version */
-	glfwWindowHint(GLFW_SAMPLES, 64);
+	glfwWindowHint(GLFW_SAMPLES, 128);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	/* We don't want the old OpenGL */
@@ -108,9 +108,10 @@ int main()
 	glBindVertexArray(0); 
 
 	/* load and create a texture */
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture); 
+	unsigned int texture1, texture2;
+	/* Texture 1 */
+	glGenTextures(1, &texture1);
+	glBindTexture(GL_TEXTURE_2D, texture1); 
 	/* all upcoming GL_TEXTURE_2D operations now have effect on this texture object */
 	/* set the texture wrapping parameters */
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
@@ -122,7 +123,7 @@ int main()
 	/* load image, create texture and generate mipmaps */
 	int width, height, nrChannels;
 	/* The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path. */
-	unsigned char *data = stbi_load(FileSystem::getPath("container.jpg").c_str(), &width, &height, &nrChannels, 0);
+	unsigned char *data = stbi_load(FileSystem::getPath("wall.jpg").c_str(), &width, &height, &nrChannels, 0);
 	if (data)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -133,6 +134,39 @@ int main()
 			std::cout << "Failed to load texture" << std::endl;
 		}
 	stbi_image_free(data);
+
+	/* Texture 2 */
+	glGenTextures(1, &texture2);
+	glBindTexture(GL_TEXTURE_2D, texture2); 
+	/* all upcoming GL_TEXTURE_2D operations now have effect on this texture object */
+	/* set the texture wrapping parameters */
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+	/* set texture wrapping to GL_REPEAT (default wrapping method) */
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	/* set texture filtering parameters */
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	stbi_set_flip_vertically_on_load(true);
+	/* The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path. */
+  data = stbi_load(FileSystem::getPath("awesomeface.png").c_str(), &width, &height, &nrChannels, 0);
+	if (data)
+		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+	else
+		{
+			std::cout << "Failed to load texture" << std::endl;
+		}
+	stbi_image_free(data);
+
+	/* tell opengl for each sampler to which texture unit it belongs to (only has to be done once) */
+	ourShader.use(); 
+	/* don't forget to activate/use the shader before setting uniforms! */
+	/* either set it manually like so: */
+	glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
+	/* or set it via the texture class */
+	ourShader.setInt("texture2", 1);
 
 	/* Uncomment this call to draw in wireframe polygons. */
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -151,7 +185,10 @@ int main()
       glClear(GL_COLOR_BUFFER_BIT);
 
 			/* bind Texture */
-			glBindTexture(GL_TEXTURE_2D, texture);
+      glActiveTexture(GL_TEXTURE0);
+    	glBindTexture(GL_TEXTURE_2D, texture1);
+      glActiveTexture(GL_TEXTURE1);
+      glBindTexture(GL_TEXTURE_2D, texture2);
 
 			/* activate by calling glUseProgram */
    		/* Draw our first triangle */
