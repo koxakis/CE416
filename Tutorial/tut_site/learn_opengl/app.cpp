@@ -66,7 +66,7 @@ int main()
 			-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
 		};
 	unsigned int indices[] = 
-		{  
+		{
 			0, 1, 3, // first triangle
 			1, 2, 3  // second triangle
 		};
@@ -89,15 +89,15 @@ int main()
 
 	/* we have to specify how OpenGL should interpret the vertex data before rendering */
 	/* position attribute */
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-  /* color attribute */
+	// color attribute
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	/* texture coord attribute */
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
 	/* note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind */
@@ -123,7 +123,7 @@ int main()
 	/* load image, create texture and generate mipmaps */
 	int width, height, nrChannels;
 	/* The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path. */
-	unsigned char *data = stbi_load(FileSystem::getPath("wall.jpg").c_str(), &width, &height, &nrChannels, 0);
+	unsigned char *data = stbi_load(FileSystem::getPath("container.jpg").c_str(), &width, &height, &nrChannels, 0);
 	if (data)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -148,7 +148,7 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	stbi_set_flip_vertically_on_load(true);
 	/* The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path. */
-  data = stbi_load(FileSystem::getPath("awesomeface.png").c_str(), &width, &height, &nrChannels, 0);
+  data = stbi_load(FileSystem::getPath("matrix.jpg").c_str(), &width, &height, &nrChannels, 0);
 	if (data)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -162,10 +162,7 @@ int main()
 
 	/* tell opengl for each sampler to which texture unit it belongs to (only has to be done once) */
 	ourShader.use(); 
-	/* don't forget to activate/use the shader before setting uniforms! */
-	/* either set it manually like so: */
-	glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0);
-	/* or set it via the texture class */
+	ourShader.setInt("texture1", 0);
 	ourShader.setInt("texture2", 1);
 
 	/* Uncomment this call to draw in wireframe polygons. */
@@ -190,12 +187,20 @@ int main()
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, texture2);
 
+			/* create transformations */
+			glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+			transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+			transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 			/* activate by calling glUseProgram */
-   		/* Draw our first triangle */
-      ourShader.use();
-      /* seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized */
-      glBindVertexArray(VAO);
-      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+			/* get matrix's uniform location and set matrix */
+			ourShader.use();
+			unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+
+			/* render container */
+			glBindVertexArray(VAO);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 			/* glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.) */
 			glfwSwapBuffers(window);
