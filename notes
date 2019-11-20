@@ -1,4 +1,4 @@
-
+#lol
 # Run 4.6 OpenGL version by entering compatibility mode from Enviroment files */
 sudo -i
 echo "MESA_GL_VERSION_OVERRIDE=4.6" >> /etc/environment 
