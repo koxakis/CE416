@@ -190,13 +190,19 @@ int main()
 
 			/* create transformations */
 			glm::mat4 transform = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-			transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
-			transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-			/* activate by calling glUseProgram */
+			/* translate the object and place it at the bottom right of the window */
+			//transform = glm::translate(transform, glm::vec3(0.5f, -0.5f, 0.0f));
+
+			/* translate the object and place it at the center of the window */
+			transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
+
+			/* rotate the object to on an axis xyz */
+			transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.5f));
 
 			/* get matrix's uniform location and set matrix */
 			ourShader.use();
 			unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+			/* modifies the value of a uniform variable or a uniform variable array */
 			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 
 			/* render container */
