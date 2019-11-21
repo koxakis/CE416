@@ -197,7 +197,7 @@ int main()
 			transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
 
 			/* rotate the object to on an axis xyz */
-			transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.5f));
+			transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 
 			/* get matrix's uniform location and set matrix */
 			ourShader.use();
