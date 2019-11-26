@@ -138,7 +138,7 @@ int main()
 	/* load image, create texture and generate mipmaps */
 	int width, height, nrChannels;
 	/* The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path. */
-	unsigned char *data = stbi_load(FileSystem::getPath("container.jpg").c_str(), &width, &height, &nrChannels, 0);
+	unsigned char *data = stbi_load(FileSystem::getPath("wall.jpg").c_str(), &width, &height, &nrChannels, 0);
 	if (data)
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -211,10 +211,16 @@ int main()
 			glm::mat4 view          = glm::mat4(1.0f);
 			glm::mat4 projection    = glm::mat4(1.0f);
 
+			/* let’s transform our plane a bit by rotating it on the x-axis so it looks like it’s laying on the floor */
 			model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			/* To move a camera backwards, is the same as moving the entire scene forward */
+			/*  translating the scene towards the negative z-axis. This gives the impression that we are moving backwards */
+			/* note that we’re translating the scene in the reverse direction of where we want to move */
 			view  = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+			/* create a large frustum that defines the visible space, anything outside the frustum will not end up in the clip space volume and will thus become clipped */
 			projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
+			/* send the matrices to the shader */
 			/* retrieve the matrix uniform locations */
 			unsigned int modelLoc = glGetUniformLocation(ourShader.ID, "model");
 			unsigned int viewLoc  = glGetUniformLocation(ourShader.ID, "view");
