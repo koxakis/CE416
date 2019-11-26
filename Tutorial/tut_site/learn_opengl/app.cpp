@@ -53,18 +53,36 @@ int main()
 	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
 
 	/* build and compile our shader program */
+	/* create 2 shader objects */
+	/* Vertex Shader is a part of the graphics pipeline */
+	/* When we issue a draw call the Vertext shader gets
+	 called first and then the Fragment shader 			*/
+
+	/* In the triangle we have 3 verticies -> this will be called 3 times 
+		to tell where in the window you want the vertex to be */ 
+
+	/* Fragment Shader is a part of the graphics pipeline */
+	/* In simple terms there are many stages in the pipeline
+		before, after and between the shaders and the rasterization */
+
+	/* Begining of draw call-> ... -> Shader(Vertex) -> ... Shader(Fragment) -> ... 
+		-> rasterization -> ... -> pixels on screen */
+
+	/* fragments aren't exactly pixels, the fragmed shader will run one time for each
+		pixel that is going to be rasterized(Fill the triangle with pixels) to deside 
+		witch colour(or other attribute) the pixel will be */
+		
   Shader ourShader("shader.vs", "shader.fs");
 	/* you can name your shader files however you like */
 
 	/* Set up vertex data (and buffer(s)) and configure vertex attributes */
 	float vertices[] = 
 		{
-			// positions          // colors           // texture coords
-        // positions          // texture coords
-         0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
-         0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
-        -0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
+			// positions          // texture coords
+				0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
+				0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
+			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
+			-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
 		};
 	unsigned int indices[] = 
 		{
@@ -192,6 +210,7 @@ int main()
 			glm::mat4 model         = glm::mat4(1.0f); 
 			glm::mat4 view          = glm::mat4(1.0f);
 			glm::mat4 projection    = glm::mat4(1.0f);
+
 			model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 			view  = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 			projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);

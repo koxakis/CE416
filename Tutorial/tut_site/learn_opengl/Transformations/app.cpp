@@ -196,7 +196,7 @@ int main()
 			/* translate the object and place it at the center of the window */
 			transform = glm::translate(transform, glm::vec3(0.0f, 0.0f, 0.0f));
 
-			/* rotate the object to on an axis xyz */
+			/* rotate the object to on an axis xyz based on the current time */
 			transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 
 			/* get matrix's uniform location and set matrix */
