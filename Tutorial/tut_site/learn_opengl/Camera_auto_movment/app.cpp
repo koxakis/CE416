@@ -5,28 +5,6 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-/* we need to set up a camera system */
-glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
-
-bool firstMouse = true;
-float yaw   = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
-float pitch =  0.0f;
-float lastX =  800.0f / 2.0;
-float lastY =  600.0 / 2.0;
-float fov   =  45.0f;
-
-/* frame timing settings*/
-/* Time between current frame and last frame */
-float deltaTime = 0.0f; 
-/* Time of last frame */
-float lastFrame = 0.0f; 
-
-void processInput(GLFWwindow *window);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-
 int main()
 {
 	/* Initialize the library */
@@ -59,12 +37,6 @@ int main()
 
 	/* Tell GLFW we want to call this function on every window resize by registering it */
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-	glfwSetCursorPosCallback(window, mouse_callback);
-	glfwSetScrollCallback(window, scroll_callback);
-
-	/* tell GLFW to capture our mouse */
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	/* glad: load all OpenGL function pointers */
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -250,6 +222,10 @@ int main()
 	ourShader.setInt("texture1", 0);
 	ourShader.setInt("texture2", 1);
 
+	/* pass projection matrix to shader (as projection matrix rarely changes there's no need to do this per frame) */
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	ourShader.setMat4("projection", projection); 
+
 	/* make sure OpenGL actually performs the depth testing we first need to tell OpenGL we want to enable depth testing */
 	glEnable(GL_DEPTH_TEST);
 	/* Uncomment this call to draw in wireframe polygons. */
@@ -257,12 +233,6 @@ int main()
 	/* render loop */
 	while (!glfwWindowShouldClose(window))
 		{
-			/* per-frame time logic */
-			/* calculate the new deltaTime value */
-			float currentFrame = glfwGetTime();
-			deltaTime = currentFrame - lastFrame;
-			lastFrame = currentFrame;
-
 			/* input */
 			processInput(window);
 
@@ -283,13 +253,17 @@ int main()
 			/* activate shader */
 			ourShader.use();
 
-			/* pass projection matrix to shader (note that in this case it could change every frame) */
-			glm::mat4 projection = glm::perspective(glm::radians(fov), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-			ourShader.setMat4("projection", projection);
-
 			/* camera/view transformation */
 			/* make sure to initialize matrix to identity matrix first */
-			glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+			glm::mat4 view = glm::mat4(1.0f); 
+
+			/* use a little bit of trigonometry to create an x and z coordinate each frame that represents a point on a
+				circle and we’ll use these for our camera position. By re-calculating the x and y coordinate we’re traversing
+				all the points in a circle and thus the camera rotates around the scene. */
+			float radius = 10.0f;
+			float camX   = sin(glfwGetTime()) * radius;
+			float camZ   = cos(glfwGetTime()) * radius;
+			view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			ourShader.setMat4("view", view);
 
 			/* render container */
@@ -330,80 +304,4 @@ int main()
 	glfwTerminate();
 
 	return 0;
-}
-
-/* process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly */
-void processInput(GLFWwindow *window)
-{
-	/* glfwGetKey function that takes the window as input together with a key */
-	if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		{ 
-			/* we close GLFW by setting its WindowShouldClose property to true */
-			glfwSetWindowShouldClose(window, true);
-		}
-
-	float cameraSpeed = 2.5 * deltaTime; 
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		{
-			cameraPos += cameraSpeed * cameraFront;
-		}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		{
-			cameraPos -= cameraSpeed * cameraFront;
-		}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		{
-			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-		}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		{
-			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-		}
-}
-// glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-    if (firstMouse)
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-    lastX = xpos;
-    lastY = ypos;
-
-    float sensitivity = 0.1f; // change this value to your liking
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-
-    yaw += xoffset;
-    pitch += yoffset;
-
-    // make sure that when pitch is out of bounds, screen doesn't get flipped
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
-
-    glm::vec3 front;
-    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-    front.y = sin(glm::radians(pitch));
-    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    cameraFront = glm::normalize(front);
-}
-
-// glfw: whenever the mouse scroll wheel scrolls, this callback is called
-// ----------------------------------------------------------------------
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-    if (fov >= 1.0f && fov <= 45.0f)
-        fov -= yoffset;
-    if (fov <= 1.0f)
-        fov = 1.0f;
-    if (fov >= 45.0f)
-        fov = 45.0f;
 }

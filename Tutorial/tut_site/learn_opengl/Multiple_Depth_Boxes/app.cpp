@@ -278,7 +278,13 @@ int main()
 					/* calculate the model matrix for each object and pass it to shader before drawing */
 					glm::mat4 model = glm::mat4(1.0f);
 					/* place the cubes in various locations */
-					model = glm::translate(model, cubePositions[i]);
+					model = glm::translate(model, cubePositions[i] );
+					
+					/* Simulate and explosion */
+					//glm::vec3 position = cubePositions[i] * (glm::vec3)glfwGetTime() ;
+					//printf("%lf %lf %lf %lf %lf %lf %lf %lf %lf \n", position.p, position.r, position.s, position.t, position.x, position.y, position.z, position.b, position.g);
+					//model = glm::translate(model,position );
+
 					/* change the angle of rotation according to the time and itterator */
 					float angle = (20.0f * i) * (float)glfwGetTime();
 					/* let’s transform our plane a bit by rotating it on the any-axis with a variable speed*/
