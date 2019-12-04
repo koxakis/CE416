@@ -90,7 +90,7 @@ int main()
 	/* Begining of draw call-> ... -> Shader(Vertex) -> ... Shader(Fragment) -> ... 
 		-> rasterization -> ... -> pixels on screen */
 
-	/* fragments aren't exactly pixels, the fragmed shader will run one time for each
+	/* fragments aren't exactly pixels, the Fragment shader will run one time for each
 		pixel that is going to be rasterized(Fill the triangle with pixels) to deside 
 		witch colour(or other attribute) the pixel will be */
 		
@@ -263,7 +263,7 @@ int main()
 			/* Render here */
 			/* State setting function */
 			/* The entire colorbuffer will be filled with the color as configured by glClearColor */
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+			glClearColor(1.0f, 0.5f, 0.31f, 1.0f);
 			/* State using */
 			/* Clear the screens colour and depth buffer */
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
@@ -295,7 +295,7 @@ int main()
 					/* calculate the model matrix for each object and pass it to shader before drawing */
 					glm::mat4 model = glm::mat4(1.0f);
 					/* place the cubes in various locations */
-					model = glm::translate(model, cubePositions[i] );
+					model = glm::translate(model, cubePositions[i]);
 
 					/* Simulate and explosion */
 					//glm::vec3 position = cubePositions[i] * (glm::vec3)glfwGetTime() ;
