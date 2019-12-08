@@ -213,7 +213,7 @@ int main()
 			lightingShader.setVec3("viewPos", camera.Position);
 
 			/* light properties */
-			/* Light properties change over time basted on current time and a sin */
+			/* Light properties change over time basted on current time and a sin*/
 			glm::vec3 lightColor;
 			lightColor.x = sin(glfwGetTime() * 2.0f);
 			lightColor.y = sin(glfwGetTime() * 0.7f);
