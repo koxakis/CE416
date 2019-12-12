@@ -7,8 +7,8 @@
 
 //#define DESERT
 //#define FACTORY
-//#define HORROR
-#define BIOCHEMICAL_LAB
+#define HORROR
+//#define BIOCHEMICAL_LAB
 
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -508,8 +508,8 @@ int main()
 			lightingShader.setFloat("spotLight.constant", 1.0f);
 			lightingShader.setFloat("spotLight.linear", 0.09);
 			lightingShader.setFloat("spotLight.quadratic", 0.032);				
-			lightingShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(10.0f)));
-			lightingShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+			lightingShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(7.0f)));
+			lightingShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(9.0f)));
 			#endif
 
 			#ifdef BIOCHEMICAL_LAB
