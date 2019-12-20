@@ -584,7 +584,7 @@ int main()
 			/* bind diffuse map */
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, diffuseMap);
-			/* bind diffuse map */
+			/* bind specular map */
 			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_2D, specularMap);
 
