@@ -14,6 +14,24 @@
 #include "shader_s.h"
 #include "filesystem.h"
 
+/* Asserts if the return was false and lunches debug break */
+#define ASSERT(x) if (!(x)) raise(SIGTRAP);
+
+#define GLCall(x) GLClearError();\
+	x;\
+	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+
+
+/* Keep reading and clearing OpenGL error flags */
+/* A more modern approach is glDebugMessageCallback */
+static void GLClearError()
+{
+	while (glGetError() != GL_NO_ERROR)
+		{	
+		}
+}
+
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -22,7 +40,8 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 unsigned int loadTexture(const char *path);
 
-/* Window settings */
+void get_resolution();
+
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
 
@@ -55,11 +74,13 @@ int main(int argc, char const *argv[])
 	/* We don't want the old OpenGL */
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  
 
+	//get_resolution();
+
 	/* Create a windowed mode window and its OpenGL context */
 	GLFWwindow* window = glfwCreateWindow( SCR_WIDTH, SCR_HEIGHT, "Computer Graphics Course-OpenGL Project", NULL, NULL);
 	if( window == NULL )
 		{
-			fprintf( stderr, "Failed to open GLFW window. If you have GPU that is not 4.6 compatible. Try the 2.1 version of the tutorials.\n" );
+			fprintf( stderr, "Failed to open GLFW window.\n" );
 			getchar();
 			glfwTerminate();
 			return -1;
@@ -67,6 +88,9 @@ int main(int argc, char const *argv[])
 	
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
+
+	/* Tell GLFW we want to call this function on every window resize by registering it */
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	/* set the callback functions to be called on every mouse event */
 	glfwSetCursorPosCallback(window, mouse_callback);
@@ -121,19 +145,6 @@ int main(int argc, char const *argv[])
 	float vertices[] = 
 		{
 			// positions          // texture coords
-/* 			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-				0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-				0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-				0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, */
-
-/* 			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-				0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-				0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-				0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-			-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-			-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, */
 
 			-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 			-0.5f,  0.5f, -0.5f,  0.0f, 0.0f,
@@ -174,7 +185,8 @@ int main(int argc, char const *argv[])
 			glm::vec3( 0.0f,  0.0f, -24.0f),
 			glm::vec3( 0.0f,  0.0f, -28.0f),
 			glm::vec3( 0.0f,  0.0f, -32.0f),
-			glm::vec3( 0.0f,  0.0f, -36.0f)
+			glm::vec3( 0.0f,  0.0f, -36.0f),
+			glm::vec3( 0.0f,  0.0f, -40.0f)
 	};
 
 	/* Vertext Buffer Object, Vertex Array Object, Element Buffer Objects */
@@ -208,7 +220,7 @@ int main(int argc, char const *argv[])
 	
 	/* load textures (we now use a utility function to keep the code more organized) */
   unsigned int texture1 = loadTexture(FileSystem::getPath("brick-wall.jpg").c_str());
-	unsigned int texture2 = loadTexture(FileSystem::getPath("awesomeface.jpg").c_str());
+	unsigned int texture2 = loadTexture(FileSystem::getPath("wall.jpg").c_str());
 
 	/* shader configuration */
 	ourShader.use();
@@ -216,7 +228,7 @@ int main(int argc, char const *argv[])
 	ourShader.setInt("texture2", 1);	
 
 	/* Uncomment this call to draw in wireframe polygons. */
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	/* render loop */
 	while (!glfwWindowShouldClose(window))
 		{
@@ -259,7 +271,7 @@ int main(int argc, char const *argv[])
 			glBindVertexArray(VAO);
 
 			/* loop in order to draw all the boxes with different attributes */
-			for (unsigned int i = 0; i < 10; i++)
+			for (unsigned int i = 0; i < 11; i++)
 				{
 					/* calculate the model matrix for each object and pass it to shader before drawing */
 					glm::mat4 model = glm::mat4(1.0f);
@@ -380,3 +392,10 @@ unsigned int loadTexture(char const * path)
 
 	return textureID;
 }
+
+/* void get_resolution() {
+	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+	SCR_WIDTH = mode->width;
+	SCR_HEIGHT = mode->height;
+} */
