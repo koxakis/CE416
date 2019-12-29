@@ -146,7 +146,8 @@ int main(int argc, char const *argv[])
 	/* SHADER HERE */
 	/* build and compile our shader program */
   Shader wall_Shader("wall_shader.vs", "wall_shader.fs");
-	Shader floor_Shader("floor_shader.vs", "wall_shader.fs");
+	Shader floor_Shader("floor_shader.vs", "floor_shader.fs");
+	Shader celling_Shader("celling_shader.vs", "celling_shader.fs");
 	/* you can name your shader files however you like */
 
 	/* Set up vertex data (and buffer(s)) and configure vertex attributes */
@@ -171,21 +172,24 @@ int main(int argc, char const *argv[])
 		};
 
 	/* position and texture coordidnets for the floor and celling */
-	float floor_celling_vertices[] =
+	float floor_vertices[] =
 		{
 			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 			 0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
 			 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
 			-0.5f, -0.5f,  0.5f,  1.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, 1.0f
+		};
+	
+	float celling_vertices[] =
+		{
+			-0.5f,  0.5f, -0.5f,  1.0f, 0.0f,
 			 0.5f,  0.5f, -0.5f,  0.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+			 0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+			 0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
 			-0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-			-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+			-0.5f,  0.5f, -0.5f,  1.0f, 0.0f		
 		};
 
 	/* world space positions of our cubes */
@@ -231,7 +235,7 @@ int main(int argc, char const *argv[])
 	/* note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind */
 	glBindBuffer(GL_ARRAY_BUFFER, 0); 
 
-	/* floor and celling buffer preparation and initialization */
+	/* floor buffer preparation and initialization */
 
 	unsigned int floor_VBO, floor_VAO;
 	glGenVertexArrays(1, &floor_VAO);
@@ -241,7 +245,7 @@ int main(int argc, char const *argv[])
 	glBindVertexArray(floor_VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, floor_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(floor_celling_vertices), floor_celling_vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(floor_vertices), floor_vertices, GL_STATIC_DRAW);
 
 	/* we have to specify how OpenGL should interpret the vertex data before rendering */
 	/* position attribute */
@@ -254,15 +258,43 @@ int main(int argc, char const *argv[])
 
 	/* note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind */
 	glBindBuffer(GL_ARRAY_BUFFER, 0); 
+
+	/* celling buffer preparation and initialization */
+
+	unsigned int celling_VBO, celling_VAO;
+	glGenVertexArrays(1, &celling_VAO);
+	glGenBuffers(1, &celling_VBO);
+
+	/* bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).*/
+	glBindVertexArray(celling_VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, celling_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(celling_vertices), celling_vertices, GL_STATIC_DRAW);
+
+	/* we have to specify how OpenGL should interpret the vertex data before rendering */
+	/* position attribute */
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	/* note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind */
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	/* note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind */
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	
 	/* load textures (we now use a utility function to keep the code more organized) */
 	/* load textures for the wall */
-  unsigned int wall_texture1 = loadTexture(FileSystem::getPath("brick-wall.jpg").c_str());
+  unsigned int wall_texture1 = loadTexture(FileSystem::getPath("celling2.jpg").c_str());
 	unsigned int wall_texture2 = loadTexture(FileSystem::getPath("wall.jpg").c_str());
 
-	/* load textures for the celling and floor*/
+	/* load textures for the floor*/
 	unsigned int floor_texture1 = loadTexture(FileSystem::getPath("Wooden-Wall.jpg").c_str());
 	unsigned int floor_texture2 = loadTexture(FileSystem::getPath("wall.jpg").c_str());
+
+	/* load textures for the celling */
+	unsigned int celling_texture1 = loadTexture(FileSystem::getPath("celling.jpg").c_str());
+	unsigned int celling_texture2 = loadTexture(FileSystem::getPath("celling2.jpg").c_str());
 
 	/* shader configuration */
 	/* shader for the walls */
@@ -270,10 +302,15 @@ int main(int argc, char const *argv[])
 	wall_Shader.setInt("wall_texture1", 0);
 	wall_Shader.setInt("wall_texture2", 1);	
 
-	/* shader for the floor and celling */
+	/* shader for the floor */
 	floor_Shader.use();
 	floor_Shader.setInt("floor_texture1",0);
 	floor_Shader.setInt("floor_texture2",1);
+
+	/* shader for the floor */
+	celling_Shader.use();
+	celling_Shader.setInt("celling_texture1",0);
+	celling_Shader.setInt("celling_texture2",1);
 
 	/* Uncomment this call to draw in wireframe polygons. */
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -356,16 +393,50 @@ int main(int argc, char const *argv[])
 			for (unsigned int i = 0; i < 11; i++)
 				{
 					/* calculate the model matrix for each object and pass it to shader before drawing */
-					glm::mat4 floor_celling_model = glm::mat4(1.0f);
+					glm::mat4 floor_model = glm::mat4(1.0f);
 					/* place the cubes in various locations */
-					floor_celling_model = glm::translate(floor_celling_model, cubePositions[i]);
+					floor_model = glm::translate(floor_model, cubePositions[i]);
 
 					/* enlarge the cubes to make them more like a corridor*/
-					floor_celling_model = glm::scale(floor_celling_model, glm::vec3(4.0f)); 
+					floor_model = glm::scale(floor_model, glm::vec3(4.0f)); 
 					/* send the model matrix to the shader */
-					floor_Shader.setMat4("model", floor_celling_model);
+					floor_Shader.setMat4("model", floor_model);
 
-					glDrawArrays(GL_TRIANGLES, 0, 12);
+					glDrawArrays(GL_TRIANGLES, 0, 6);
+				}
+
+      glActiveTexture(GL_TEXTURE0);
+    	glBindTexture(GL_TEXTURE_2D, celling_texture1);
+      glActiveTexture(GL_TEXTURE1);
+      glBindTexture(GL_TEXTURE_2D, celling_texture2);
+
+			/* activate shader */
+			celling_Shader.use();
+
+			/* pass projection matrix to shader (note that in this case it could change every frame) */
+			celling_Shader.setMat4("projection", projection);
+
+			/* camera/view transformation */
+			/* make sure to initialize matrix to identity matrix first */
+			celling_Shader.setMat4("view", view);
+
+			/* render container */
+			glBindVertexArray(celling_VAO);		
+
+			/* loop in order to draw all the boxes with different attributes */
+			for (unsigned int i = 0; i < 11; i++)
+				{
+					/* calculate the model matrix for each object and pass it to shader before drawing */
+					glm::mat4 celling_model = glm::mat4(1.0f);
+					/* place the cubes in various locations */
+					celling_model = glm::translate(celling_model, cubePositions[i]);
+
+					/* enlarge the cubes to make them more like a corridor*/
+					celling_model = glm::scale(celling_model, glm::vec3(4.0f)); 
+					/* send the model matrix to the shader */
+					celling_Shader.setMat4("model", celling_model);
+
+					glDrawArrays(GL_TRIANGLES, 0, 6);
 				}
 
 			/* glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.) */
