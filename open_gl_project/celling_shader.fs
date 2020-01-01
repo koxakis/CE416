@@ -1,5 +1,5 @@
 #version 460 core
-#define NR_POINT_LIGHTS 4
+#define NR_POINT_LIGHTS 11
 
 out vec4 FragColor;
 
@@ -46,7 +46,7 @@ void main()
 	/* properties */
 	vec3 norm = normalize(Normal);
 	vec3 viewDir = normalize(viewPos - FragPos);	
-	vec3 result;
+	vec3 result = CalcDirLight(dirLight, norm, viewDir);
 
 	/* phase 2: point lights */
 	for(int i = 0; i < NR_POINT_LIGHTS; i++)

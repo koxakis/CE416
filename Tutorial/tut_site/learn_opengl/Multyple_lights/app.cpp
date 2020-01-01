@@ -7,8 +7,8 @@
 
 //#define DESERT
 //#define FACTORY
-//#define HORROR
-#define BIOCHEMICAL_LAB
+#define HORROR
+//#define BIOCHEMICAL_LAB
 
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-
+#include <signal.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -30,6 +30,21 @@ static void GLClearError()
 		{	
 		}
 }
+
+/* Keep reading errors and display them */
+/* In order to search for an error code convert to hex and look in glew.h */
+static bool GLLogCall(const char* function, const char* file, int line)
+{
+	
+	while ( GLenum currentError = glGetError() )
+		{
+			std::cout << "[OpenGL ERROR] (" << currentError << ") from function: " 
+				<< function << " in file " << file << " at line " << line << std::endl;
+			return false;
+		}
+	return true;
+}
+
 /* Tell GLFW we want to call this function on every window resize by registering it */
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -213,9 +228,17 @@ int main(int argc, char const *argv[])
 	glm::vec3 pointLightPositions[] = 
 		{
 			glm::vec3( 0.0f,  1.75f,  0.0f),
+			glm::vec3( 0.0f,  1.75f, -4.0f),
+			glm::vec3( 0.0f,  1.75f, -8.0f),
 			glm::vec3( 0.0f,  1.75f, -12.0f),
+			glm::vec3( 0.0f,  1.75f, -16.0f),
 			glm::vec3( 0.0f,  1.75f, -20.0f),
-			glm::vec3( 0.0f,  1.75f, -32.0f)
+			glm::vec3( 0.0f,  1.75f, -24.0f),
+			glm::vec3( 0.0f,  1.75f, -28.0f),
+			glm::vec3( 0.0f,  1.75f, -32.0f),
+			glm::vec3( 0.0f,  1.75f, -36.0f),
+			glm::vec3( 0.0f,  1.75f, -40.0f),
+
 		};
 	/* Vertext Buffer Object, Vertex Array Object, Element Buffer Objects */
 	/* VAO points attributes to positons in the VBO according to the stride as well as an EBO */
@@ -379,43 +402,43 @@ int main(int argc, char const *argv[])
 					by defining light types as classes and set their values in there, or by using a more efficient uniform approach
 					by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
 			*/		
+			glm::vec3 pointLightColors[] = {
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f)
+				};
 			/* directional light */
-			wall_Shader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-			wall_Shader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-			wall_Shader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-			wall_Shader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
-			/* point light 1 */
-			wall_Shader.setVec3("pointLights[0].position", pointLightPositions[0]);
-			wall_Shader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-			wall_Shader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-			wall_Shader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-			wall_Shader.setFloat("pointLights[0].constant", 1.0f);
-			wall_Shader.setFloat("pointLights[0].linear", 0.09);
-			wall_Shader.setFloat("pointLights[0].quadratic", 0.032);
-			/* point light 2 */
-			wall_Shader.setVec3("pointLights[1].position", pointLightPositions[1]);
-			wall_Shader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-			wall_Shader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-			wall_Shader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-			wall_Shader.setFloat("pointLights[1].constant", 1.0f);
-			wall_Shader.setFloat("pointLights[1].linear", 0.09);
-			wall_Shader.setFloat("pointLights[1].quadratic", 0.032);
-			/* point light 3 */
-			wall_Shader.setVec3("pointLights[2].position", pointLightPositions[2]);
-			wall_Shader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
-			wall_Shader.setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
-			wall_Shader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-			wall_Shader.setFloat("pointLights[2].constant", 1.0f);
-			wall_Shader.setFloat("pointLights[2].linear", 0.09);
-			wall_Shader.setFloat("pointLights[2].quadratic", 0.032);
-			/* point light 4 */
-			wall_Shader.setVec3("pointLights[3].position", pointLightPositions[3]);
-			wall_Shader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
-			wall_Shader.setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
-			wall_Shader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-			wall_Shader.setFloat("pointLights[3].constant", 1.0f);
-			wall_Shader.setFloat("pointLights[3].linear", 0.09);
-			wall_Shader.setFloat("pointLights[3].quadratic", 0.032);		
+			wall_Shader.setVec3("dirLight.direction",0.0f, 0.0f, 0.0f);
+			wall_Shader.setVec3("dirLight.ambient", 0.0f, 0.0f, 0.0f);
+			wall_Shader.setVec3("dirLight.diffuse", 0.0f, 0.0f, 0.0f);
+			wall_Shader.setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f);
+
+			char attribute_buffer[50];
+			/* point light attributes */
+			for (int i=0; i<11; i++)
+				{
+					sprintf(attribute_buffer,"pointLights[%d].position", i);
+					wall_Shader.setVec3(attribute_buffer, pointLightPositions[i]);
+					
+					sprintf(attribute_buffer,"pointLights[%d].ambient", i);
+					wall_Shader.setVec3(attribute_buffer, 0.05f, 0.05f, 0.05f);
+										
+					sprintf(attribute_buffer,"pointLights[%d].diffuse", i);
+					wall_Shader.setVec3(attribute_buffer, 0.8f, 0.8f, 0.8f);
+
+					sprintf(attribute_buffer,"pointLights[%d].specular", i);
+					wall_Shader.setVec3(attribute_buffer, 1.0f, 1.0f, 1.0f);
+										
+					sprintf(attribute_buffer,"pointLights[%d].constant", i);
+					wall_Shader.setFloat(attribute_buffer, 1.0f);
+										
+					sprintf(attribute_buffer,"pointLights[%d].linear", i);
+					wall_Shader.setFloat(attribute_buffer, 0.09);
+										
+					sprintf(attribute_buffer,"pointLights[%d].quadratic", i);
+					wall_Shader.setFloat(attribute_buffer, 0.032);									
+				}
 
 			/* pass projection matrix to shader (note that in this case it could change every frame) */
 			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -430,9 +453,10 @@ int main(int argc, char const *argv[])
 			glm::mat4 wall_model = glm::mat4(1.0f);
 			wall_Shader.setMat4("model", wall_model);
 			
-			/* bind Texture */
+			/* bind diffuse map */
       glActiveTexture(GL_TEXTURE0);
     	glBindTexture(GL_TEXTURE_2D, diffuseMap_wall);
+			/* bind specular map */
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, specularMap_wall);	
 
@@ -453,6 +477,7 @@ int main(int argc, char const *argv[])
 					wall_Shader.setMat4("model", wall_model);
 
 					glDrawArrays(GL_TRIANGLES, 0, 12);
+					GLClearError();
 				}
 
 			/* activate shader */
@@ -468,48 +493,42 @@ int main(int argc, char const *argv[])
 					by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
 			*/
 			/* directional light */
-			floor_Shader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-			floor_Shader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-			floor_Shader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-			floor_Shader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);	
-			/* point light 1 */
-			floor_Shader.setVec3("pointLights[0].position", pointLightPositions[0]);
-			floor_Shader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-			floor_Shader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-			floor_Shader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-			floor_Shader.setFloat("pointLights[0].constant", 1.0f);
-			floor_Shader.setFloat("pointLights[0].linear", 0.09);
-			floor_Shader.setFloat("pointLights[0].quadratic", 0.032);
-			/* point light 2 */
-			floor_Shader.setVec3("pointLights[1].position", pointLightPositions[1]);
-			floor_Shader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-			floor_Shader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-			floor_Shader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-			floor_Shader.setFloat("pointLights[1].constant", 1.0f);
-			floor_Shader.setFloat("pointLights[1].linear", 0.09);
-			floor_Shader.setFloat("pointLights[1].quadratic", 0.032);
-			/* point light 3 */
-			floor_Shader.setVec3("pointLights[2].position", pointLightPositions[2]);
-			floor_Shader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
-			floor_Shader.setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
-			floor_Shader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-			floor_Shader.setFloat("pointLights[2].constant", 1.0f);
-			floor_Shader.setFloat("pointLights[2].linear", 0.09);
-			floor_Shader.setFloat("pointLights[2].quadratic", 0.032);
-			/* point light 4 */
-			floor_Shader.setVec3("pointLights[3].position", pointLightPositions[3]);
-			floor_Shader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
-			floor_Shader.setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
-			floor_Shader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-			floor_Shader.setFloat("pointLights[3].constant", 1.0f);
-			floor_Shader.setFloat("pointLights[3].linear", 0.09);
-			floor_Shader.setFloat("pointLights[3].quadratic", 0.032);	
+			floor_Shader.setVec3("dirLight.direction",0.0f, 0.0f, 0.0f);
+			floor_Shader.setVec3("dirLight.ambient", 0.0f, 0.0f, 0.0f);
+			floor_Shader.setVec3("dirLight.diffuse", 0.0f, 0.0f, 0.0f);
+			floor_Shader.setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f);	
+			/* point light attributes */
+			for (int i=0; i<11; i++)
+				{
+					sprintf(attribute_buffer,"pointLights[%d].position", i);
+					floor_Shader.setVec3(attribute_buffer, pointLightPositions[i]);
+					
+					sprintf(attribute_buffer,"pointLights[%d].ambient", i);
+					floor_Shader.setVec3(attribute_buffer, 0.05f, 0.05f, 0.05f);
+										
+					sprintf(attribute_buffer,"pointLights[%d].diffuse", i);
+					floor_Shader.setVec3(attribute_buffer, 0.8f, 0.8f, 0.8f);
+
+					sprintf(attribute_buffer,"pointLights[%d].specular", i);
+					floor_Shader.setVec3(attribute_buffer, 1.0f, 1.0f, 1.0f);
+										
+					sprintf(attribute_buffer,"pointLights[%d].constant", i);
+					floor_Shader.setFloat(attribute_buffer, 1.0f);
+										
+					sprintf(attribute_buffer,"pointLights[%d].linear", i);
+					floor_Shader.setFloat(attribute_buffer, 0.09);
+										
+					sprintf(attribute_buffer,"pointLights[%d].quadratic", i);
+					floor_Shader.setFloat(attribute_buffer, 0.032);									
+				}
 
 			/* pass projection matrix to shader (note that in this case it could change every frame) */
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);			
 			floor_Shader.setMat4("projection", projection);
 
 			/* camera/view transformation */
 			/* make sure to initialize matrix to identity matrix first */
+			view = camera.GetViewMatrix();
 			floor_Shader.setMat4("view", view);
 
 			/* world transformation */
@@ -537,7 +556,7 @@ int main(int argc, char const *argv[])
 					/* send the model matrix to the shader */
 					floor_Shader.setMat4("model", floor_model);
 
-					glDrawArrays(GL_TRIANGLES, 0, 6);
+					GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
 				}
 
 			/* activate shader */
@@ -553,48 +572,42 @@ int main(int argc, char const *argv[])
 					by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
 			*/		
 			/* directional light */
-			celling_Shader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-			celling_Shader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
-			celling_Shader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-			celling_Shader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
-			/* point light 1 */
-			celling_Shader.setVec3("pointLights[0].position", pointLightPositions[0]);
-			celling_Shader.setVec3("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-			celling_Shader.setVec3("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-			celling_Shader.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-			celling_Shader.setFloat("pointLights[0].constant", 1.0f);
-			celling_Shader.setFloat("pointLights[0].linear", 0.09);
-			celling_Shader.setFloat("pointLights[0].quadratic", 0.032);
-			/* point light 2 */
-			celling_Shader.setVec3("pointLights[1].position", pointLightPositions[1]);
-			celling_Shader.setVec3("pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-			celling_Shader.setVec3("pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-			celling_Shader.setVec3("pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-			celling_Shader.setFloat("pointLights[1].constant", 1.0f);
-			celling_Shader.setFloat("pointLights[1].linear", 0.09);
-			celling_Shader.setFloat("pointLights[1].quadratic", 0.032);
-			/* point light 3 */
-			celling_Shader.setVec3("pointLights[2].position", pointLightPositions[2]);
-			celling_Shader.setVec3("pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
-			celling_Shader.setVec3("pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
-			celling_Shader.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-			celling_Shader.setFloat("pointLights[2].constant", 1.0f);
-			celling_Shader.setFloat("pointLights[2].linear", 0.09);
-			celling_Shader.setFloat("pointLights[2].quadratic", 0.032);
-			/* point light 4 */
-			celling_Shader.setVec3("pointLights[3].position", pointLightPositions[3]);
-			celling_Shader.setVec3("pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
-			celling_Shader.setVec3("pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
-			celling_Shader.setVec3("pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-			celling_Shader.setFloat("pointLights[3].constant", 1.0f);
-			celling_Shader.setFloat("pointLights[3].linear", 0.09);
-			celling_Shader.setFloat("pointLights[3].quadratic", 0.032);	
+			celling_Shader.setVec3("dirLight.direction",0.0f, 0.0f, 0.0f);
+			celling_Shader.setVec3("dirLight.ambient", 0.0f, 0.0f, 0.0f);
+			celling_Shader.setVec3("dirLight.diffuse", 0.0f, 0.0f, 0.0f);
+			celling_Shader.setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f);
+			/* point light attributes */
+			for (int i=0; i<11; i++)
+				{
+					sprintf(attribute_buffer,"pointLights[%d].position", i);
+					celling_Shader.setVec3(attribute_buffer, pointLightPositions[i]);
+					
+					sprintf(attribute_buffer,"pointLights[%d].ambient", i);
+					celling_Shader.setVec3(attribute_buffer, 0.05f, 0.05f, 0.05f);
+										
+					sprintf(attribute_buffer,"pointLights[%d].diffuse", i);
+					celling_Shader.setVec3(attribute_buffer, 0.8f, 0.8f, 0.8f);
+
+					sprintf(attribute_buffer,"pointLights[%d].specular", i);
+					celling_Shader.setVec3(attribute_buffer, 1.0f, 1.0f, 1.0f);
+										
+					sprintf(attribute_buffer,"pointLights[%d].constant", i);
+					celling_Shader.setFloat(attribute_buffer, 1.0f);
+										
+					sprintf(attribute_buffer,"pointLights[%d].linear", i);
+					celling_Shader.setFloat(attribute_buffer, 0.09);
+										
+					sprintf(attribute_buffer,"pointLights[%d].quadratic", i);
+					celling_Shader.setFloat(attribute_buffer, 0.032);									
+				}
 
 			/* pass projection matrix to shader (note that in this case it could change every frame) */
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);						
 			celling_Shader.setMat4("projection", projection);
 
 			/* camera/view transformation */
 			/* make sure to initialize matrix to identity matrix first */
+			view = camera.GetViewMatrix();
 			celling_Shader.setMat4("view", view);
 			
 			/* world transformation */
@@ -633,10 +646,9 @@ int main(int argc, char const *argv[])
 
 			/* many smaller cubes */
 			glBindVertexArray(lightVAO);
-			for (unsigned int i = 0; i < 4; i++)
+			for (unsigned int i = 0; i < 11; i++)
 				{
 					glm::mat4 lamp_model = glm::mat4(1.0f);
-					lamp_model = glm::mat4(1.0f);
 					lamp_model = glm::translate(lamp_model, pointLightPositions[i]);
 					/* Make it a smaller cube */
 					lamp_model = glm::scale(lamp_model, glm::vec3(0.2f)); 

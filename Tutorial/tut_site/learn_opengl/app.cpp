@@ -3,11 +3,11 @@
 #include "stb_image.h"
 
 /* select a scene theme for lighting and such */
-//#define VANILLA
+#define VANILLA
 
 //#define DESERT
 //#define FACTORY
-#define HORROR
+//#define HORROR
 //#define BIOCHEMICAL_LAB
 
 void processInput(GLFWwindow *window);
@@ -167,24 +167,25 @@ int main()
 	glm::vec3 cubePositions[] = 
 	 	{
 			glm::vec3( 0.0f,  0.0f,  0.0f),
-			glm::vec3( 2.0f,  5.0f, -15.0f),
-			glm::vec3(-1.5f, -2.2f, -2.5f),
-			glm::vec3(-3.8f, -2.0f, -12.3f),
-			glm::vec3( 2.4f, -0.4f, -3.5f),
-			glm::vec3(-1.7f,  3.0f, -7.5f),
-			glm::vec3( 1.3f, -2.0f, -2.5f),
-			glm::vec3( 1.5f,  2.0f, -2.5f),
-			glm::vec3( 1.5f,  0.2f, -1.5f),
-			glm::vec3(-1.3f,  1.0f, -1.5f)
+			glm::vec3( 0.0f,  0.0f, -4.0f),
+			glm::vec3( 0.0f,  0.0f, -8.0f),
+			glm::vec3( 0.0f,  0.0f, -12.0f),
+			glm::vec3( 0.0f,  0.0f, -16.0f),
+			glm::vec3( 0.0f,  0.0f, -20.0f),
+			glm::vec3( 0.0f,  0.0f, -24.0f),
+			glm::vec3( 0.0f,  0.0f, -28.0f),
+			glm::vec3( 0.0f,  0.0f, -32.0f),
+			glm::vec3( 0.0f,  0.0f, -36.0f),
+			glm::vec3( 0.0f,  0.0f, -40.0f)
   	};
 
 	/* positions of the point lights */
 	glm::vec3 pointLightPositions[] = 
 		{
-			glm::vec3( 0.7f,  0.2f,  2.0f),
-			glm::vec3( 2.3f, -3.3f, -4.0f),
-			glm::vec3(-4.0f,  2.0f, -12.0f),
-			glm::vec3( 0.0f,  0.0f, -3.0f)
+			glm::vec3( 0.0f,  1.75f,  0.0f),
+			glm::vec3( 0.0f,  1.75f, -12.0f),
+			glm::vec3( 0.0f,  1.75f, -20.0f),
+			glm::vec3( 0.0f,  1.75f, -32.0f)
 		};
 	/* Vertext Buffer Object, Vertex Array Object, Element Buffer Objects */
 	/* VAO points attributes to positons in the VBO according to the stride as well as an EBO */
@@ -398,10 +399,10 @@ int main()
 
 			#ifdef FACTORY
 			glm::vec3 pointLightColors[] = {
-					glm::vec3(0.2f, 0.2f, 0.6f),
-					glm::vec3(0.3f, 0.3f, 0.7f),
-					glm::vec3(0.0f, 0.0f, 0.3f),
-					glm::vec3(0.4f, 0.4f, 0.4f)
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f)
 				};
 
 			// Directional light
@@ -590,13 +591,15 @@ int main()
 
 			/* render containers */
 			glBindVertexArray(cubeVAO);
-			for (unsigned int i = 0; i < 10; i++)
+			for (unsigned int i = 0; i < 11; i++)
 				{
 					/* calculate the model matrix for each object and pass it to shader before drawing */
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, cubePositions[i]);
-					float angle = (20.0f * i) * glfwGetTime();
-					model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+					//float angle = (20.0f * i) * glfwGetTime();
+					//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+										
+					model = glm::scale(model, glm::vec3(4.0f)); 
 					lightingShader.setMat4("model", model);
 
 					glDrawArrays(GL_TRIANGLES, 0, 36);
