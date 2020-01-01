@@ -350,7 +350,7 @@ int main(int argc, char const *argv[])
 
 	/* load textures for the celling */
 	unsigned int diffuseMap_celling = loadTexture(FileSystem::getPath("celling.jpg").c_str());
-	unsigned int specularMap_celling = loadTexture(FileSystem::getPath("celling.jpg").c_str());
+	unsigned int specularMap_celling = loadTexture(FileSystem::getPath("celling2_diffuse.jpg").c_str());
 
 	/* shader configuration */
 	/* shader for the walls */
@@ -402,17 +402,25 @@ int main(int argc, char const *argv[])
 					by defining light types as classes and set their values in there, or by using a more efficient uniform approach
 					by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
 			*/		
-			glm::vec3 pointLightColors[] = {
-					glm::vec3(1.0f, 1.0f, 1.0f),
-					glm::vec3(1.0f, 1.0f, 1.0f),
-					glm::vec3(1.0f, 1.0f, 1.0f),
-					glm::vec3(1.0f, 1.0f, 1.0f)
+			glm::vec3 wallPointLightColors[] = 
+				{
+					glm::vec3(0.5f, 0.5f, 0.5f),
+					glm::vec3(0.5f, 0.5f, 0.5f),
+					glm::vec3(0.5f, 0.5f, 0.5f),
+					glm::vec3(0.5f, 0.5f, 0.5f),
+					glm::vec3(0.5f, 0.5f, 0.5f),
+					glm::vec3(0.5f, 0.5f, 0.5f),
+					glm::vec3(0.5f, 0.5f, 0.5f),
+					glm::vec3(0.5f, 0.5f, 0.5f),
+					glm::vec3(0.5f, 0.5f, 0.5f),
+					glm::vec3(0.5f, 0.5f, 0.5f),
+					glm::vec3(0.5f, 0.5f, 0.5f)
 				};
 			/* directional light */
 			wall_Shader.setVec3("dirLight.direction",0.0f, 0.0f, 0.0f);
-			wall_Shader.setVec3("dirLight.ambient", 0.0f, 0.0f, 0.0f);
-			wall_Shader.setVec3("dirLight.diffuse", 0.0f, 0.0f, 0.0f);
-			wall_Shader.setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f);
+			wall_Shader.setVec3("dirLight.ambient", 0.5f, 0.5f, 0.5f);
+			wall_Shader.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
+			wall_Shader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
 
 			char attribute_buffer[50];
 			/* point light attributes */
@@ -422,13 +430,13 @@ int main(int argc, char const *argv[])
 					wall_Shader.setVec3(attribute_buffer, pointLightPositions[i]);
 					
 					sprintf(attribute_buffer,"pointLights[%d].ambient", i);
-					wall_Shader.setVec3(attribute_buffer, 0.05f, 0.05f, 0.05f);
+					wall_Shader.setVec3(attribute_buffer, wallPointLightColors[i].x * 0.1,  wallPointLightColors[i].y * 0.1,  wallPointLightColors[i].z * 0.1);		
 										
 					sprintf(attribute_buffer,"pointLights[%d].diffuse", i);
-					wall_Shader.setVec3(attribute_buffer, 0.8f, 0.8f, 0.8f);
+					wall_Shader.setVec3(attribute_buffer, wallPointLightColors[i].x,  wallPointLightColors[i].y,  wallPointLightColors[i].z);
 
 					sprintf(attribute_buffer,"pointLights[%d].specular", i);
-					wall_Shader.setVec3(attribute_buffer, 1.0f, 1.0f, 1.0f);
+					wall_Shader.setVec3(attribute_buffer, wallPointLightColors[i].x,  wallPointLightColors[i].y,  wallPointLightColors[i].z);
 										
 					sprintf(attribute_buffer,"pointLights[%d].constant", i);
 					wall_Shader.setFloat(attribute_buffer, 1.0f);
@@ -492,11 +500,25 @@ int main(int argc, char const *argv[])
 					by defining light types as classes and set their values in there, or by using a more efficient uniform approach
 					by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
 			*/
+			glm::vec3 floorPointLightColors[] = 
+				{
+					glm::vec3(0.1f, 0.1f, 0.1f),
+					glm::vec3(0.1f, 0.1f, 0.1f),
+					glm::vec3(0.1f, 0.1f, 0.1f),
+					glm::vec3(0.1f, 0.1f, 0.1f),
+					glm::vec3(0.1f, 0.1f, 0.1f),
+					glm::vec3(0.1f, 0.1f, 0.1f),
+					glm::vec3(0.1f, 0.1f, 0.1f),
+					glm::vec3(0.1f, 0.1f, 0.1f),
+					glm::vec3(0.1f, 0.1f, 0.1f),
+					glm::vec3(0.1f, 0.1f, 0.1f),
+					glm::vec3(0.1f, 0.1f, 0.1f)
+				};
 			/* directional light */
-			floor_Shader.setVec3("dirLight.direction",0.0f, 0.0f, 0.0f);
-			floor_Shader.setVec3("dirLight.ambient", 0.0f, 0.0f, 0.0f);
-			floor_Shader.setVec3("dirLight.diffuse", 0.0f, 0.0f, 0.0f);
-			floor_Shader.setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f);	
+			floor_Shader.setVec3("dirLight.direction", 0.5f, 0.5f, 0.5f);
+			floor_Shader.setVec3("dirLight.ambient", 0.5f, 0.5f, 0.5f);
+			floor_Shader.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
+			floor_Shader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);	
 			/* point light attributes */
 			for (int i=0; i<11; i++)
 				{
@@ -504,13 +526,13 @@ int main(int argc, char const *argv[])
 					floor_Shader.setVec3(attribute_buffer, pointLightPositions[i]);
 					
 					sprintf(attribute_buffer,"pointLights[%d].ambient", i);
-					floor_Shader.setVec3(attribute_buffer, 0.05f, 0.05f, 0.05f);
+					floor_Shader.setVec3(attribute_buffer, floorPointLightColors[i].x * 0.1,  floorPointLightColors[i].y * 0.1,  floorPointLightColors[i].z * 0.1);		
 										
 					sprintf(attribute_buffer,"pointLights[%d].diffuse", i);
-					floor_Shader.setVec3(attribute_buffer, 0.8f, 0.8f, 0.8f);
+					floor_Shader.setVec3(attribute_buffer, floorPointLightColors[i].x,  floorPointLightColors[i].y,  floorPointLightColors[i].z);
 
 					sprintf(attribute_buffer,"pointLights[%d].specular", i);
-					floor_Shader.setVec3(attribute_buffer, 1.0f, 1.0f, 1.0f);
+					floor_Shader.setVec3(attribute_buffer, floorPointLightColors[i].x,  floorPointLightColors[i].y,  floorPointLightColors[i].z);
 										
 					sprintf(attribute_buffer,"pointLights[%d].constant", i);
 					floor_Shader.setFloat(attribute_buffer, 1.0f);
@@ -570,12 +592,26 @@ int main(int argc, char const *argv[])
 					the proper PointLight struct in the array to set each uniform variable. This can be done more code-friendly
 					by defining light types as classes and set their values in there, or by using a more efficient uniform approach
 					by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
-			*/		
+			*/	
+			glm::vec3 cellingPointLightColors[] = 
+				{
+					glm::vec3(0.75f, 0.75f, 0.75f),
+					glm::vec3(0.75f, 0.75f, 0.75f),
+					glm::vec3(0.75f, 0.75f, 0.75f),
+					glm::vec3(0.75f, 0.75f, 0.75f),
+					glm::vec3(0.75f, 0.75f, 0.75f),
+					glm::vec3(0.75f, 0.75f, 0.75f),
+					glm::vec3(0.75f, 0.75f, 0.75f),
+					glm::vec3(0.75f, 0.75f, 0.75f),
+					glm::vec3(0.75f, 0.75f, 0.75f),
+					glm::vec3(0.75f, 0.75f, 0.75f),
+					glm::vec3(0.75f, 0.75f, 0.75f)
+				};	
 			/* directional light */
 			celling_Shader.setVec3("dirLight.direction",0.0f, 0.0f, 0.0f);
-			celling_Shader.setVec3("dirLight.ambient", 0.0f, 0.0f, 0.0f);
-			celling_Shader.setVec3("dirLight.diffuse", 0.0f, 0.0f, 0.0f);
-			celling_Shader.setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f);
+			celling_Shader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+			celling_Shader.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
+			celling_Shader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
 			/* point light attributes */
 			for (int i=0; i<11; i++)
 				{
@@ -583,13 +619,13 @@ int main(int argc, char const *argv[])
 					celling_Shader.setVec3(attribute_buffer, pointLightPositions[i]);
 					
 					sprintf(attribute_buffer,"pointLights[%d].ambient", i);
-					celling_Shader.setVec3(attribute_buffer, 0.05f, 0.05f, 0.05f);
+					celling_Shader.setVec3(attribute_buffer, cellingPointLightColors[i].x * 0.1,  cellingPointLightColors[i].y * 0.1,  cellingPointLightColors[i].z * 0.1);		
 										
 					sprintf(attribute_buffer,"pointLights[%d].diffuse", i);
-					celling_Shader.setVec3(attribute_buffer, 0.8f, 0.8f, 0.8f);
+					celling_Shader.setVec3(attribute_buffer, cellingPointLightColors[i].x,  cellingPointLightColors[i].y,  cellingPointLightColors[i].z);
 
 					sprintf(attribute_buffer,"pointLights[%d].specular", i);
-					celling_Shader.setVec3(attribute_buffer, 1.0f, 1.0f, 1.0f);
+					celling_Shader.setVec3(attribute_buffer, cellingPointLightColors[i].x,  cellingPointLightColors[i].y,  cellingPointLightColors[i].z);
 										
 					sprintf(attribute_buffer,"pointLights[%d].constant", i);
 					celling_Shader.setFloat(attribute_buffer, 1.0f);
