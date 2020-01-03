@@ -14,6 +14,8 @@
 #include "shader_s.h"
 #include "filesystem.h"
 
+#define NR_POINT_LIGHTS 11
+
 /* Asserts if the return was false and lunches debug break */
 #define ASSERT(x) if (!(x)) raise(SIGTRAP);
 
@@ -103,7 +105,6 @@ int main(int argc, char const *argv[])
 	if( window == NULL )
 		{
 			fprintf( stderr, "Failed to open GLFW window.\n" );
-			getchar();
 			glfwTerminate();
 			return -1;
 		}
@@ -227,17 +228,17 @@ int main(int argc, char const *argv[])
 	/* positions of the point lights */
 	glm::vec3 pointLightPositions[] = 
 		{
-			glm::vec3( 0.0f,  1.75f,  0.0f),
-			glm::vec3( 0.0f,  1.75f, -4.0f),
-			glm::vec3( 0.0f,  1.75f, -8.0f),
-			glm::vec3( 0.0f,  1.75f, -12.0f),
-			glm::vec3( 0.0f,  1.75f, -16.0f),
-			glm::vec3( 0.0f,  1.75f, -20.0f),
-			glm::vec3( 0.0f,  1.75f, -24.0f),
-			glm::vec3( 0.0f,  1.75f, -28.0f),
-			glm::vec3( 0.0f,  1.75f, -32.0f),
-			glm::vec3( 0.0f,  1.75f, -36.0f),
-			glm::vec3( 0.0f,  1.75f, -40.0f),
+			glm::vec3( 0.0f,  1.85f,  1.0f),
+			glm::vec3( 0.0f,  1.85f, -4.0f),
+			glm::vec3( 0.0f,  1.85f, -8.0f),
+			glm::vec3( 0.0f,  1.85f, -12.0f),
+			glm::vec3( 0.0f,  1.85f, -16.0f),
+			glm::vec3( 0.0f,  1.85f, -20.0f),
+			glm::vec3( 0.0f,  1.85f, -24.0f),
+			glm::vec3( 0.0f,  1.85f, -28.0f),
+			glm::vec3( 0.0f,  1.85f, -32.0f),
+			glm::vec3( 0.0f,  1.85f, -36.0f),
+			glm::vec3( 0.0f,  1.85f, -42.0f),
 
 		};
 	/* Vertext Buffer Object, Vertex Array Object, Element Buffer Objects */
@@ -341,16 +342,16 @@ int main(int argc, char const *argv[])
 
 	/* load textures (we now use a utility function to keep the code more organized) */
 	/* load textures for the wall */
-  unsigned int diffuseMap_wall = loadTexture(FileSystem::getPath("celling2.jpg").c_str());
-	unsigned int specularMap_wall = loadTexture(FileSystem::getPath("celling2.jpg").c_str());
+  unsigned int diffuseMap_wall = loadTexture(FileSystem::getPath("gray.jpg").c_str());
+	unsigned int specularMap_wall = loadTexture(FileSystem::getPath("gray.jpg").c_str());
 
 	/* load textures for the floor*/
-	unsigned int diffuseMap_floor = loadTexture(FileSystem::getPath("Wooden-Wall.jpg").c_str());
-	unsigned int specularMap_floor = loadTexture(FileSystem::getPath("Wooden-Wall.jpg").c_str());
+	unsigned int diffuseMap_floor = loadTexture(FileSystem::getPath("Wooden_Wall.jpg").c_str());
+	unsigned int specularMap_floor = loadTexture(FileSystem::getPath("Wooden_Wall.jpg").c_str());
 
 	/* load textures for the celling */
-	unsigned int diffuseMap_celling = loadTexture(FileSystem::getPath("celling.jpg").c_str());
-	unsigned int specularMap_celling = loadTexture(FileSystem::getPath("celling2_diffuse.jpg").c_str());
+	unsigned int diffuseMap_celling = loadTexture(FileSystem::getPath("celling2.jpg").c_str());
+	unsigned int specularMap_celling = loadTexture(FileSystem::getPath("celling2.jpg").c_str());
 
 	/* shader configuration */
 	/* shader for the walls */
@@ -404,23 +405,23 @@ int main(int argc, char const *argv[])
 			*/		
 			glm::vec3 wallPointLightColors[] = 
 				{
-					glm::vec3(0.5f, 0.5f, 0.5f),
-					glm::vec3(0.5f, 0.5f, 0.5f),
-					glm::vec3(0.5f, 0.5f, 0.5f),
-					glm::vec3(0.5f, 0.5f, 0.5f),
-					glm::vec3(0.5f, 0.5f, 0.5f),
-					glm::vec3(0.5f, 0.5f, 0.5f),
-					glm::vec3(0.5f, 0.5f, 0.5f),
-					glm::vec3(0.5f, 0.5f, 0.5f),
-					glm::vec3(0.5f, 0.5f, 0.5f),
-					glm::vec3(0.5f, 0.5f, 0.5f),
-					glm::vec3(0.5f, 0.5f, 0.5f)
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f)
 				};
 			/* directional light */
-			wall_Shader.setVec3("dirLight.direction",0.0f, 0.0f, 0.0f);
-			wall_Shader.setVec3("dirLight.ambient", 0.5f, 0.5f, 0.5f);
-			wall_Shader.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
-			wall_Shader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+			wall_Shader.setVec3("dirLight.direction", 0.0f, 1.75f, 0.0f);
+			wall_Shader.setVec3("dirLight.ambient", 0.1f, 0.1f, 0.1f);
+			wall_Shader.setVec3("dirLight.diffuse", 0.1f, 0.1f, 0.1f);
+			wall_Shader.setVec3("dirLight.specular", 0.1f, 0.1f, 0.1f);
 
 			char attribute_buffer[50];
 			/* point light attributes */
@@ -515,7 +516,7 @@ int main(int argc, char const *argv[])
 					glm::vec3(0.1f, 0.1f, 0.1f)
 				};
 			/* directional light */
-			floor_Shader.setVec3("dirLight.direction", 0.5f, 0.5f, 0.5f);
+			floor_Shader.setVec3("dirLight.direction", 0.0f, 1.75f, 0.0f);
 			floor_Shader.setVec3("dirLight.ambient", 0.5f, 0.5f, 0.5f);
 			floor_Shader.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
 			floor_Shader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);	
@@ -595,20 +596,20 @@ int main(int argc, char const *argv[])
 			*/	
 			glm::vec3 cellingPointLightColors[] = 
 				{
-					glm::vec3(0.75f, 0.75f, 0.75f),
-					glm::vec3(0.75f, 0.75f, 0.75f),
-					glm::vec3(0.75f, 0.75f, 0.75f),
-					glm::vec3(0.75f, 0.75f, 0.75f),
-					glm::vec3(0.75f, 0.75f, 0.75f),
-					glm::vec3(0.75f, 0.75f, 0.75f),
-					glm::vec3(0.75f, 0.75f, 0.75f),
-					glm::vec3(0.75f, 0.75f, 0.75f),
-					glm::vec3(0.75f, 0.75f, 0.75f),
-					glm::vec3(0.75f, 0.75f, 0.75f),
-					glm::vec3(0.75f, 0.75f, 0.75f)
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f),
+					glm::vec3(1.0f, 1.0f, 1.0f)
 				};	
 			/* directional light */
-			celling_Shader.setVec3("dirLight.direction",0.0f, 0.0f, 0.0f);
+			celling_Shader.setVec3("dirLight.direction", 0.0f, 1.75f, 0.0f);
 			celling_Shader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
 			celling_Shader.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
 			celling_Shader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
@@ -682,7 +683,7 @@ int main(int argc, char const *argv[])
 
 			/* many smaller cubes */
 			glBindVertexArray(lightVAO);
-			for (unsigned int i = 0; i < 11; i++)
+			for (unsigned int i = 0; i < NR_POINT_LIGHTS; i++)
 				{
 					glm::mat4 lamp_model = glm::mat4(1.0f);
 					lamp_model = glm::translate(lamp_model, pointLightPositions[i]);
