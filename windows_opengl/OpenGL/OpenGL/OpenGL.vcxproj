@@ -76,8 +76,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\glew-2.1.0\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\IMAGE_LOADING;$(SolutionDir)Dependencies\SHADER;$(SolutionDir)Dependencies\CAMERA;$(SolutionDir)Dependencies\FILE_PATH;$(SolutionDir)Dependencies\GLM</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,8 +104,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLEW\glew-2.1.0\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\GLAD\include;$(SolutionDir)Dependencies\IMAGE_LOADING;$(SolutionDir)Dependencies\SHADER;$(SolutionDir)Dependencies\CAMERA;$(SolutionDir)Dependencies\FILE_PATH;$(SolutionDir)Dependencies\GLM</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,10 +131,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Dependencies\GLAD\src\glad.c" />
     <ClCompile Include="src\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\celling_shader.fs" />
+    <None Include="res\shaders\celling_shader.vs" />
+    <None Include="res\shaders\floor_shader.fs" />
+    <None Include="res\shaders\floor_shader.vs" />
+    <None Include="res\shaders\lamp.fs" />
+    <None Include="res\shaders\lamp.vs" />
     <None Include="res\shaders\Shader_basic.shader" />
+    <None Include="res\shaders\wall_shader.fs" />
+    <None Include="res\shaders\wall_shader.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\celling.jpg" />
+    <Image Include="res\celling2.jpg" />
+    <Image Include="res\celling2_defuse.jpg" />
+    <Image Include="res\concrete.jpg" />
+    <Image Include="res\gray.jpg" />
+    <Image Include="res\Wooden_Wall.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

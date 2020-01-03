@@ -18,8 +18,39 @@
     <ClCompile Include="src\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Dependencies\GLAD\src\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Shader_basic.shader" />
+    <None Include="res\shaders\celling_shader.fs" />
+    <None Include="res\shaders\celling_shader.vs" />
+    <None Include="res\shaders\floor_shader.fs" />
+    <None Include="res\shaders\floor_shader.vs" />
+    <None Include="res\shaders\lamp.fs" />
+    <None Include="res\shaders\lamp.vs" />
+    <None Include="res\shaders\wall_shader.fs" />
+    <None Include="res\shaders\wall_shader.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\celling.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\celling2.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\celling2_defuse.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\concrete.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\gray.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Wooden_Wall.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
