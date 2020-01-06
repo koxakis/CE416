@@ -1,7 +1,7 @@
 APP = app
 CC=g++
 CLEANBROKEN = '1'
-LIBS = -g -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lglad -Lusr/lib/libGLEW.so -lGLEW -lglfw -lXxf86vm -lXinerama -lXcursor -fpermissive -I.
+LIBS = -Wall -g -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lglad -Lusr/lib/libGLEW.so -lGLEW -lglfw -lXxf86vm -lXinerama -lXcursor -fpermissive -I.
 SRC = app.cpp
 OBJ = $(SRC:.ccp=.o)
 

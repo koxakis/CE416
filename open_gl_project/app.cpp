@@ -16,6 +16,8 @@
 
 #define NR_POINT_LIGHTS 11
 
+// TODO fix error detection and halt code 
+
 /* Asserts if the return was false and lunches debug break */
 #define ASSERT(x) if (!(x)) raise(SIGTRAP);
 
@@ -168,6 +170,9 @@ int main(int argc, char const *argv[])
 	Shader lampShader("lamp.vs", "lamp.fs");
 
 	Shader exhibit_triangleShader("triangle.vs", "triangle.fs");
+	Shader exhibit_squareShader("triangle.vs", "triangle.fs");
+
+	Shader exhibit_explanationShader("square.vs", "square.fs");
 	/* you can name your shader files however you like */
 
 	/* Set up vertex data (and buffer(s)) and configure vertex attributes */
@@ -217,10 +222,27 @@ int main(int argc, char const *argv[])
 		{
 			// positions         // colors
 			0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
-			-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
-			0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top 
+			-0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom left
+			0.0f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f   // top 
 		};
-	unsigned int square_triangle_vertices_indices[] = 
+
+	float square_vertices[] = 
+		{
+			 0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f, // top right
+			 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, // bottom right
+			-0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,// bottom left
+			-0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f // top left 
+		};
+
+	float square_vertices_texture[] = 
+		{
+			// positions          // texture coords
+				0.5f,  0.5f, 0.0f,   1.0f, 1.0f, // top right
+				0.5f, -0.5f, 0.0f,   1.0f, 0.0f, // bottom right
+			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, // bottom left
+			-0.5f,  0.5f, 0.0f,   0.0f, 1.0f  // top left 
+		};
+	unsigned int square_vertices_indices[] = 
 		{ // note that we start from 0!
 			0, 1, 3, // first triangle
 			1, 2, 3 // second triangle
@@ -228,7 +250,9 @@ int main(int argc, char const *argv[])
 	/* world space positions of our exhibits */
 	glm::vec3 exhibitsPositions[] = 
 		{
-			glm::vec3( -1.85f,  0.0f,  -1.85f),
+			glm::vec3( -1.9f,  0.0f,  -1.9f),
+			glm::vec3( 1.9f,  0.0f,  -1.9f),
+			glm::vec3( 1.9f,  0.0f,  -0.5f)
 		};
 
 	/* world space positions of our cubes */
@@ -361,13 +385,46 @@ int main(int argc, char const *argv[])
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	unsigned int VBO, VAO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-	glBindVertexArray(VAO);
+	/* exhibit explenations buffer init and set */
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	unsigned int exhibit_explenations_VBO, exhibit_explenations_VAO, exhibit_explenations_EBO;
+	glGenVertexArrays(1, &exhibit_explenations_VAO);
+	glGenBuffers(1, &exhibit_explenations_VBO);
+	glGenBuffers(1, &exhibit_explenations_EBO);
+	/* bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).*/
+	glBindVertexArray(exhibit_explenations_VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, exhibit_explenations_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(square_vertices_texture), square_vertices_texture, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, exhibit_explenations_EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(square_vertices_indices), square_vertices_indices, GL_STATIC_DRAW);
+
+	/* we have to specify how OpenGL should interpret the vertex data before rendering */
+	/* position attribute */
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	/* texture coord attribute */
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	/* note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind */
+	glBindBuffer(GL_ARRAY_BUFFER, 0); 
+
+	/* You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+			VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary. */
+	glBindVertexArray(0); 
+
+	/* exhibit 1 buffer init and set */
+
+	unsigned int exhibit_1_VBO, exhibit_1_VAO;
+	glGenVertexArrays(1, &exhibit_1_VAO);
+	glGenBuffers(1, &exhibit_1_VBO);
+	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+	glBindVertexArray(exhibit_1_VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, exhibit_1_VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(square_triangle_vertices), square_triangle_vertices, GL_STATIC_DRAW);
 
 	// position attribute
@@ -377,6 +434,33 @@ int main(int argc, char const *argv[])
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
   
+	glBindVertexArray(0);
+
+	/* exhibit 2 buffer init and set */
+
+	unsigned int exhibit_2_VBO, exhibit_2_VAO, exhibit_2_EBO;
+	glGenVertexArrays(1, &exhibit_2_VAO);
+	glGenBuffers(1, &exhibit_2_VBO);
+	glGenBuffers(1, &exhibit_2_EBO);
+	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+	glBindVertexArray(exhibit_2_VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, exhibit_2_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(square_vertices), square_vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, exhibit_2_EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(square_vertices_indices), square_vertices_indices, GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);	
+
+	// note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+	glBindBuffer(GL_ARRAY_BUFFER, 0); 
+
 	glBindVertexArray(0);
 
 	/* load textures (we now use a utility function to keep the code more organized) */
@@ -391,6 +475,10 @@ int main(int argc, char const *argv[])
 	/* load textures for the celling */
 	unsigned int diffuseMap_celling = loadTexture(FileSystem::getPath("celling2.jpg").c_str());
 	unsigned int specularMap_celling = loadTexture(FileSystem::getPath("celling2.jpg").c_str());
+
+	/* load textures for explenations */
+	unsigned int text_texture = loadTexture(FileSystem::getPath("celling2_defuse.jpg").c_str());
+	unsigned int openGL_logo = loadTexture(FileSystem::getPath("brick-wall.jpg").c_str());
 
 	/* shader configuration */
 	/* shader for the walls */
@@ -407,6 +495,10 @@ int main(int argc, char const *argv[])
 	celling_Shader.use();
 	celling_Shader.setInt("material.diffuseMap_celling",0);
 	celling_Shader.setInt("material.specularMap_celling",1);
+
+	exhibit_explanationShader.use();
+	exhibit_explanationShader.setInt("text_texture", 0);
+	exhibit_explanationShader.setInt("openGL_logo", 1);
 
 	/* Uncomment this call to draw in wireframe polygons. */
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -430,9 +522,10 @@ int main(int argc, char const *argv[])
 			/* Clear the screens colour and depth buffer */
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
-			/* exhibit triangle 1 shader use */
+			/* exhibit triangle 1 matrix set */
+
 			exhibit_triangleShader.use();
-      glBindVertexArray(VAO);
+      glBindVertexArray(exhibit_1_VAO);
 
 			/* pass projection matrix to shader (note that in this case it could change every frame) */
 			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -451,13 +544,83 @@ int main(int argc, char const *argv[])
 
 			exhibit_a_model = glm::translate(exhibit_a_model, exhibitsPositions[0]);
 			/* rotate the object to on an axis xyz based on the current time */
-			exhibit_a_model = glm::rotate(exhibit_a_model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+			float angle = (float) glm::radians(90.0f);
+			exhibit_a_model = glm::rotate(exhibit_a_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
 
-			/* Make it a smaller cube */
+			/* scale the exhibit */
 			exhibit_a_model = glm::scale(exhibit_a_model, glm::vec3(1.25f)); 
-			lampShader.setMat4("model", exhibit_a_model);
+			exhibit_triangleShader.setMat4("model", exhibit_a_model);
       
 			glDrawArrays(GL_TRIANGLES, 0, 3);		
+
+			/* exhibit 2 square matrix set */
+
+			exhibit_squareShader.use();
+
+      glBindVertexArray(exhibit_2_VAO);
+
+			/* pass projection matrix to shader (note that in this case it could change every frame) */
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			exhibit_squareShader.setMat4("projection", projection);
+
+			/* camera/view transformation */
+			/* make sure to initialize matrix to identity matrix first */
+			view = camera.GetViewMatrix();
+			exhibit_squareShader.setMat4("view", view);
+
+			/* world transformation */
+			glm::mat4 exhibit_b_model = glm::mat4(1.0f);
+			exhibit_squareShader.setMat4("model", exhibit_b_model);
+
+			exhibit_b_model = glm::mat4(1.0f);
+
+			exhibit_b_model = glm::translate(exhibit_b_model, exhibitsPositions[1]);
+			/* rotate the object to on an axis xyz based on the current time */
+			angle = (float) glm::radians(90.0f);
+			exhibit_b_model = glm::rotate(exhibit_b_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+			/* scale the exhibit */
+			exhibit_b_model = glm::scale(exhibit_b_model, glm::vec3(1.25f)); 
+			exhibit_squareShader.setMat4("model", exhibit_b_model);
+
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+			/* exhibit explanation */
+
+			/* bind Texture */
+			exhibit_explanationShader.use();
+      glBindVertexArray(exhibit_explenations_VAO);
+
+      glActiveTexture(GL_TEXTURE0);
+    	glBindTexture(GL_TEXTURE_2D, text_texture);
+      glActiveTexture(GL_TEXTURE1);
+      glBindTexture(GL_TEXTURE_2D, openGL_logo);
+
+			/* pass projection matrix to shader (note that in this case it could change every frame) */
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			exhibit_explanationShader.setMat4("projection", projection);
+
+			/* camera/view transformation */
+			/* make sure to initialize matrix to identity matrix first */
+			view = camera.GetViewMatrix();
+			exhibit_explanationShader.setMat4("view", view);
+
+			/* world transformation */
+			glm::mat4 exhibit_explanation_model = glm::mat4(1.0f);
+			exhibit_explanationShader.setMat4("model", exhibit_b_model);
+
+			exhibit_explanation_model = glm::mat4(1.0f);
+
+			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[2]);
+			/* rotate the object to on an axis xyz based on the current time */
+			angle = (float) glm::radians(90.0f);
+			exhibit_explanation_model = glm::rotate(exhibit_explanation_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+			/* scale the exhibit */
+			exhibit_explanation_model = glm::scale(exhibit_explanation_model, glm::vec3(1.25f)); 
+			exhibit_explanationShader.setMat4("model", exhibit_explanation_model);
+
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);			
 
 			/* be sure to activate shader when setting uniforms/drawing objects */
 			wall_Shader.use();
