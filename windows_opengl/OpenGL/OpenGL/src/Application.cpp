@@ -161,11 +161,11 @@ int main(int argc, char const* argv[])
 
 					 /* SHADER HERE */
 					 /* build and compile our shader program */
-	Shader wall_Shader("D:\\git_repos\\CE416\\windows_opengl\\OpenGL\\OpenGL\\res\\shaders\\wall_shader.vs", "D:\\git_repos\\CE416\\windows_opengl\\OpenGL\\OpenGL\\res\\shaders\\wall_shader.fs");
-	Shader floor_Shader("D:\\git_repos\\CE416\\windows_opengl\\OpenGL\\OpenGL\\res\\shaders\\floor_shader.vs", "D:\\git_repos\\CE416\\windows_opengl\\OpenGL\\OpenGL\\res\\shaders\\floor_shader.fs");
-	Shader celling_Shader("D:\\git_repos\\CE416\\windows_opengl\\OpenGL\\OpenGL\\res\\shaders\\celling_shader.vs", "D:\\git_repos\\CE416\\windows_opengl\\OpenGL\\OpenGL\\res\\shaders\\celling_shader.fs");
+	Shader wall_Shader(FileSystem::getPath("shaders\\wall_shader.vs").c_str(), FileSystem::getPath("shaders\\wall_shader.fs").c_str());
+	Shader floor_Shader(FileSystem::getPath("shaders\\floor_shader.vs").c_str(), FileSystem::getPath("shaders\\floor_shader.fs").c_str());
+	Shader celling_Shader(FileSystem::getPath("shaders\\celling_shader.vs").c_str(), FileSystem::getPath("shaders\\celling_shader.fs").c_str());
 
-	Shader lampShader("D:\\git_repos\\CE416\\windows_opengl\\OpenGL\\OpenGL\\res\\shaders\\lamp.vs", "D:\\git_repos\\CE416\\windows_opengl\\OpenGL\\OpenGL\\res\\shaders\\lamp.fs");
+	Shader lampShader(FileSystem::getPath("shaders\\lamp.vs").c_str(), FileSystem::getPath("shaders\\lamp.fs").c_str());
 	/* you can name your shader files however you like */
 
 	/* Set up vertex data (and buffer(s)) and configure vertex attributes */
@@ -427,25 +427,25 @@ int main(int argc, char const* argv[])
 		/* point light attributes */
 		for (int i = 0; i < 11; i++)
 		{
-			sprintf(attribute_buffer, "pointLights[%d].position", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].position", i);
 			wall_Shader.setVec3(attribute_buffer, pointLightPositions[i]);
 
-			sprintf(attribute_buffer, "pointLights[%d].ambient", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].ambient", i);
 			wall_Shader.setVec3(attribute_buffer, wallPointLightColors[i].x * 0.1, wallPointLightColors[i].y * 0.1, wallPointLightColors[i].z * 0.1);
 
-			sprintf(attribute_buffer, "pointLights[%d].diffuse", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].diffuse", i);
 			wall_Shader.setVec3(attribute_buffer, wallPointLightColors[i].x, wallPointLightColors[i].y, wallPointLightColors[i].z);
 
-			sprintf(attribute_buffer, "pointLights[%d].specular", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].specular", i);
 			wall_Shader.setVec3(attribute_buffer, wallPointLightColors[i].x, wallPointLightColors[i].y, wallPointLightColors[i].z);
 
-			sprintf(attribute_buffer, "pointLights[%d].constant", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].constant", i);
 			wall_Shader.setFloat(attribute_buffer, 1.0f);
 
-			sprintf(attribute_buffer, "pointLights[%d].linear", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].linear", i);
 			wall_Shader.setFloat(attribute_buffer, 0.09);
 
-			sprintf(attribute_buffer, "pointLights[%d].quadratic", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].quadratic", i);
 			wall_Shader.setFloat(attribute_buffer, 0.032);
 		}
 
@@ -523,25 +523,25 @@ int main(int argc, char const* argv[])
 		/* point light attributes */
 		for (int i = 0; i < 11; i++)
 		{
-			sprintf(attribute_buffer, "pointLights[%d].position", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].position", i);
 			floor_Shader.setVec3(attribute_buffer, pointLightPositions[i]);
 
-			sprintf(attribute_buffer, "pointLights[%d].ambient", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].ambient", i);
 			floor_Shader.setVec3(attribute_buffer, floorPointLightColors[i].x * 0.1, floorPointLightColors[i].y * 0.1, floorPointLightColors[i].z * 0.1);
 
-			sprintf(attribute_buffer, "pointLights[%d].diffuse", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].diffuse", i);
 			floor_Shader.setVec3(attribute_buffer, floorPointLightColors[i].x, floorPointLightColors[i].y, floorPointLightColors[i].z);
 
-			sprintf(attribute_buffer, "pointLights[%d].specular", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].specular", i);
 			floor_Shader.setVec3(attribute_buffer, floorPointLightColors[i].x, floorPointLightColors[i].y, floorPointLightColors[i].z);
 
-			sprintf(attribute_buffer, "pointLights[%d].constant", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].constant", i);
 			floor_Shader.setFloat(attribute_buffer, 1.0f);
 
-			sprintf(attribute_buffer, "pointLights[%d].linear", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].linear", i);
 			floor_Shader.setFloat(attribute_buffer, 0.09);
 
-			sprintf(attribute_buffer, "pointLights[%d].quadratic", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].quadratic", i);
 			floor_Shader.setFloat(attribute_buffer, 0.032);
 		}
 
@@ -616,25 +616,25 @@ int main(int argc, char const* argv[])
 		/* point light attributes */
 		for (int i = 0; i < 11; i++)
 		{
-			sprintf(attribute_buffer, "pointLights[%d].position", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].position", i);
 			celling_Shader.setVec3(attribute_buffer, pointLightPositions[i]);
 
-			sprintf(attribute_buffer, "pointLights[%d].ambient", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].ambient", i);
 			celling_Shader.setVec3(attribute_buffer, cellingPointLightColors[i].x * 0.1, cellingPointLightColors[i].y * 0.1, cellingPointLightColors[i].z * 0.1);
 
-			sprintf(attribute_buffer, "pointLights[%d].diffuse", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].diffuse", i);
 			celling_Shader.setVec3(attribute_buffer, cellingPointLightColors[i].x, cellingPointLightColors[i].y, cellingPointLightColors[i].z);
 
-			sprintf(attribute_buffer, "pointLights[%d].specular", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].specular", i);
 			celling_Shader.setVec3(attribute_buffer, cellingPointLightColors[i].x, cellingPointLightColors[i].y, cellingPointLightColors[i].z);
 
-			sprintf(attribute_buffer, "pointLights[%d].constant", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].constant", i);
 			celling_Shader.setFloat(attribute_buffer, 1.0f);
 
-			sprintf(attribute_buffer, "pointLights[%d].linear", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].linear", i);
 			celling_Shader.setFloat(attribute_buffer, 0.09);
 
-			sprintf(attribute_buffer, "pointLights[%d].quadratic", i);
+			sprintf_s(attribute_buffer, "pointLights[%d].quadratic", i);
 			celling_Shader.setFloat(attribute_buffer, 0.032);
 		}
 
