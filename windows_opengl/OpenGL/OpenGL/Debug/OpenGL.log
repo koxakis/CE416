@@ -1,27 +1,2 @@
-﻿  glad.c
-  Application.cpp
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(379,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(434,134): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(434,101): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(434,68): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(446,47): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(449,48): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(530,138): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(530,104): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(530,70): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(542,48): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(545,49): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(623,146): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(623,110): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(623,74): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(635,50): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(638,51): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(743,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(744,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(748,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(749,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(751,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(752,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(760,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
   OpenGL.vcxproj -> D:\git_repos\CE416\windows_opengl\OpenGL\Debug\OpenGL.exe
