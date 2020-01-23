@@ -76,7 +76,7 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 
-/* frame timing settings*/
+/* frame timing settings */
 /* Time between current frame and last frame */
 float deltaTime = 0.0f; 
 /* Time of last frame */
@@ -163,30 +163,88 @@ int main(int argc, char const *argv[])
 
 	/* SHADER HERE */
 	/* build and compile our shader program */
+
+	/* Corridor shader */
   Shader wall_Shader("wall_shader.vs", "wall_shader.fs");
 	Shader floor_Shader("floor_shader.vs", "floor_shader.fs");
 	Shader celling_Shader("celling_shader.vs", "celling_shader.fs");
 
 	Shader lampShader("lamp.vs", "lamp.fs");
 
+	/* exhibits shader */
 	Shader exhibit_triangleShader("triangle.vs", "triangle.fs");
 	Shader exhibit_squareShader("triangle.vs", "triangle.fs");
+
 	Shader exhibit_triangleColourShader("triangle.vs", "triangle.fs");
 	Shader exhibit_triangleColourRotationShader("triangle.vs", "triangle.fs");
+
 	Shader exhibit_squareTextureShader("exhibit_5_texture.vs", "exhibit_5_texture.fs");
 	Shader exhibit_cubeTextureShader("exhibit_5_texture.vs", "exhibit_5_texture.fs");
 
+	Shader exhibit_cubeMultyLightColourShader("exhibit_7_light_colour.vs", "exhibit_7_light_colour.fs");
+	Shader exhibit_7_lamp("lamp.vs", "lamp.fs" );
 
+	/* exhibit explanation shader */
 	Shader exhibit_explanationShader("square.vs", "square.fs");
 	Shader exhibit_explanation2Shader("square.vs", "square.fs");
 	Shader exhibit_explanation3Shader("square.vs", "square.fs");
 	Shader exhibit_explanation4Shader("square.vs", "square.fs");
 	Shader exhibit_explanation5Shader("square.vs", "square.fs");
 	Shader exhibit_explanation6Shader("square.vs", "square.fs");
+	Shader exhibit_explanation7Shader("square.vs", "square.fs");
+	Shader exhibit_explanation8Shader("square.vs", "square.fs");
+
 
 	/* you can name your shader files however you like */
 
 	/* Set up vertex data (and buffer(s)) and configure vertex attributes */
+
+	float normals_cube_vertices[] = 
+		{
+			//position            //normals
+			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+				0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+				0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+				0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+				0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+				0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+				0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+			-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+			-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+
+			-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+			-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+			-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+			-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+			-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+			-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+				0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+				0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+				0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+				0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+				0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+			-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+				0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+				0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+				0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+			-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+			-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+			-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+				0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+				0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+			-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+			-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f		
+		};
+
 	float texture_cube_vertices[] = 
 		{
 			// positions          // texture coords
@@ -255,6 +313,7 @@ int main(int argc, char const *argv[])
 	/* position and texture coordidnets for the floor and celling */
 	float floor_vertices[] =
 		{
+			// positions          // normals           // texture coords
 			-0.5f, -0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
 			 0.5f, -0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
 			 0.5f, -0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
@@ -265,6 +324,7 @@ int main(int argc, char const *argv[])
 	
 	float celling_vertices[] =
 		{
+			// positions          // normals           // texture coords
 			-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 			 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
 			 0.5f,  0.5f,  0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
@@ -292,6 +352,7 @@ int main(int argc, char const *argv[])
 
 	float square_vertices[] = 
 		{
+			// positions         // colors
 			 0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f, // top right
 			 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, // bottom right
 			-0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,// bottom left
@@ -321,10 +382,10 @@ int main(int argc, char const *argv[])
 			glm::vec3( 1.9f,  0.0f,  1.0f),
 
 			/* 2 exhibit 2 explanation */
-			glm::vec3( 1.9f,  0.0f,  -0.5f),
+			glm::vec3( 1.9f,  0.0f,  -1.5f),
 
 			/* 3 exhibit 1 explanation */
-			glm::vec3( -1.9f,  0.0f,  -0.5f),
+			glm::vec3( -1.9f,  0.0f,  -1.5f),
 
 			/* 4 exhibit 3 triangle tri-colour */
 			glm::vec3( -1.9f,  0.0f,  -4.0f),
@@ -348,7 +409,19 @@ int main(int argc, char const *argv[])
 			glm::vec3( 1.9f,  0.0f,  -10.0f),
 
 			/* 11 exhibit 5 explanation */
-			glm::vec3( -1.9f,  0.0f,  -10.0f)
+			glm::vec3( -1.9f,  0.0f,  -10.0f),
+
+			/* 12 exhibit 7 */
+			glm::vec3( -1.4f,  0.0f,  -13.0f),
+
+			/* 13 exhibit 8 */
+			glm::vec3( 1.4f,  0.0f,  -13.0f),
+
+			/* 14 exhibit 8 explanation */
+			glm::vec3( 1.9f,  0.0f,  -14.5f),
+
+			/* 15 exhibit 7 explanation */
+			glm::vec3( -1.9f,  0.0f,  -14.5f)
 		};
 
 	/* world space positions of our cubes */
@@ -609,6 +682,31 @@ int main(int argc, char const *argv[])
 	/* You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
 			VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary. */
 	glBindVertexArray(0); 
+
+	/* exhibit 7 cube with basic lighting and revolving colours buffer set and init */
+
+	unsigned int exhibit_7_VBO, exhibit_7_VAO;
+	glGenVertexArrays(1, &exhibit_7_VAO);
+	glGenBuffers(1, &exhibit_7_VBO);
+
+	/* bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).*/
+	glBindBuffer(GL_ARRAY_BUFFER, exhibit_7_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(normals_cube_vertices), normals_cube_vertices, GL_STATIC_DRAW);
+
+	glBindVertexArray(exhibit_7_VAO);
+
+	/* we have to specify how OpenGL should interpret the vertex data before rendering */
+	/* position attribute */
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	/* normal attribute */
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
+
+	/* You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
+			VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary. */
+	glBindVertexArray(0); 
+	
 	/* load textures (we now use a utility function to keep the code more organized) */
 	/* load textures for the wall */
   unsigned int diffuseMap_wall = loadTexture(FileSystem::getPath("gray.jpg").c_str());
@@ -623,8 +721,16 @@ int main(int argc, char const *argv[])
 	unsigned int specularMap_celling = loadTexture(FileSystem::getPath("celling2.jpg").c_str());
 
 	/* load textures for explenations */
-	unsigned int text_texture = loadTexture(FileSystem::getPath("celling2_defuse.jpg").c_str());
-	unsigned int openGL_logo = loadTexture(FileSystem::getPath("brick-wall.jpg").c_str());
+	unsigned int text_texture_1 = loadTexture(FileSystem::getPath("exhibit_explenation_1.jpg").c_str());
+	unsigned int text_texture_2 = loadTexture(FileSystem::getPath("exhibit_explenation_2.jpg").c_str());
+	unsigned int text_texture_3 = loadTexture(FileSystem::getPath("exhibit_explenation_3.jpg").c_str());
+	unsigned int text_texture_4 = loadTexture(FileSystem::getPath("exhibit_explenation_4.jpg").c_str());
+	unsigned int text_texture_5 = loadTexture(FileSystem::getPath("exhibit_explenation_5.jpg").c_str());
+	unsigned int text_texture_6 = loadTexture(FileSystem::getPath("exhibit_explenation_6.jpg").c_str());
+	unsigned int text_texture_7 = loadTexture(FileSystem::getPath("exhibit_explenation_7.jpg").c_str());
+	unsigned int text_texture_8 = loadTexture(FileSystem::getPath("exhibit_explenation_8.jpg").c_str());
+
+	unsigned int openGL_logo = loadTexture(FileSystem::getPath("opengl.png").c_str());
 
 	/* load textures for exhibit 5 square  with texture */
 	unsigned int exhibit_5_texture_1 = loadTexture(FileSystem::getPath("container2.png").c_str());
@@ -647,28 +753,36 @@ int main(int argc, char const *argv[])
 	celling_Shader.setInt("material.specularMap_celling",1);
 
 	exhibit_explanationShader.use();
-	exhibit_explanationShader.setInt("text_texture", 0);
+	exhibit_explanationShader.setInt("text_texture_1", 0);
 	exhibit_explanationShader.setInt("openGL_logo", 1);
 
 	exhibit_explanation2Shader.use();
-	exhibit_explanation2Shader.setInt("text_texture", 0);
+	exhibit_explanation2Shader.setInt("text_texture_2", 0);
 	exhibit_explanation2Shader.setInt("openGL_logo", 1);
 
 	exhibit_explanation3Shader.use();
-	exhibit_explanation3Shader.setInt("text_texture", 0);
+	exhibit_explanation3Shader.setInt("text_texture_3", 0);
 	exhibit_explanation3Shader.setInt("openGL_logo", 1);
 
 	exhibit_explanation4Shader.use();
-	exhibit_explanation4Shader.setInt("text_texture", 0);
+	exhibit_explanation4Shader.setInt("text_texture_4", 0);
 	exhibit_explanation4Shader.setInt("openGL_logo", 1);
 	
 	exhibit_explanation5Shader.use();
-	exhibit_explanation5Shader.setInt("text_texture", 0);
+	exhibit_explanation5Shader.setInt("text_texture_5", 0);
 	exhibit_explanation5Shader.setInt("openGL_logo", 1);
 
 	exhibit_explanation6Shader.use();
-	exhibit_explanation6Shader.setInt("text_texture", 0);
-	exhibit_explanation6Shader.setInt("openGL_logo", 1);
+	exhibit_explanation6Shader.setInt("text_texture_6", 0);
+	exhibit_explanation6Shader.setInt("openGL_logo", 1); 
+
+	exhibit_explanation7Shader.use();
+	exhibit_explanation7Shader.setInt("text_texture_7", 0);
+	exhibit_explanation7Shader.setInt("openGL_logo", 1); 
+
+	exhibit_explanation8Shader.use();
+	exhibit_explanation8Shader.setInt("text_texture_8", 0);
+	exhibit_explanation8Shader.setInt("openGL_logo", 1); 
 
 	exhibit_squareTextureShader.use();
 	exhibit_squareTextureShader.setInt("exhibit_5_texture_1", 0);
@@ -898,6 +1012,142 @@ int main(int argc, char const *argv[])
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 
+			/* exhibit 7 cube with basic lighting and revolving colours */
+
+			exhibit_cubeMultyLightColourShader.use();
+			glm::vec3 light_pos_exhibit_7(1.2f,  1.0f, -15.0f);
+
+			exhibit_cubeMultyLightColourShader.setVec3("light.position", light_pos_exhibit_7);
+			exhibit_cubeMultyLightColourShader.setVec3("viewPos", camera.Position);
+
+			/* light properties */
+			/* Light properties change over time basted on current time and a sin*/
+			glm::vec3 lightColor;
+			lightColor.x = sin(glfwGetTime() * 2.0f);
+			lightColor.y = sin(glfwGetTime() * 0.7f);
+			lightColor.z = sin(glfwGetTime() * 1.3f);
+
+			/* decrease the influence */
+			glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); 
+			/* low influence */
+			glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); 
+			
+			/*  to fill the struct we still have to set the individual uniforms, but this time
+					prefixed with the struct’s name: */
+			exhibit_cubeMultyLightColourShader.setVec3("light.ambient", ambientColor);
+			exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", diffuseColor);
+			exhibit_cubeMultyLightColourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+			/* material properties */
+			exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+			exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+
+			/* specular lighting doesn't have full effect on this object's material */
+			exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f); 
+
+			/* keep the shininess at 32 */
+			exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);			
+
+			/* pass projection matrix to shader (note that in this case it could change every frame) */
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			view = camera.GetViewMatrix();
+			exhibit_cubeMultyLightColourShader.setMat4("projection", projection);
+			exhibit_cubeMultyLightColourShader.setMat4("view", view);
+
+			/* camera/view transformation */
+			/* make sure to initialize matrix to identity matrix first */
+
+
+			/* world transformation */
+			glm::mat4 exhibit_g_model = glm::mat4(1.0f);
+			exhibit_cubeMultyLightColourShader.setMat4("model", exhibit_g_model);
+
+			exhibit_g_model = glm::mat4(1.0f);
+
+			exhibit_g_model = glm::translate(exhibit_g_model, exhibitsPositions[12]);
+			/* scale the exhibit */
+			exhibit_g_model = glm::scale(exhibit_g_model, glm::vec3(0.75f)); 
+			exhibit_cubeMultyLightColourShader.setMat4("model", exhibit_g_model); 
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+			exhibit_7_lamp.use();
+			exhibit_7_lamp.setMat4("projection", projection);
+			exhibit_7_lamp.setMat4("view", view);
+
+			glm::mat4 lamp_model2 = glm::mat4(1.0f);
+			lamp_model2 = glm::translate(lamp_model2, light_pos_exhibit_7);
+			/* a smaller cube */
+			lamp_model2 = glm::scale(lamp_model2, glm::vec3(0.2f)); 
+			exhibit_7_lamp.setMat4("model", lamp_model2);
+
+			glBindVertexArray(exhibit_7_VAO);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+			/* exhibit 8 cube with basic lighting and revolving colours rotating*/
+
+			exhibit_cubeMultyLightColourShader.use();
+			light_pos_exhibit_7 = glm::vec3(1.2f,  1.0f, -15.0f);
+
+			exhibit_cubeMultyLightColourShader.setVec3("light.position", light_pos_exhibit_7);
+			exhibit_cubeMultyLightColourShader.setVec3("viewPos", camera.Position);
+
+			/* light properties */
+			/* Light properties change over time basted on current time and a sin*/
+			lightColor.x = sin(glfwGetTime() * 2.0f);
+			lightColor.y = sin(glfwGetTime() * 0.7f);
+			lightColor.z = sin(glfwGetTime() * 1.3f);
+
+			/* decrease the influence */
+			diffuseColor = lightColor   * glm::vec3(0.5f); 
+			/* low influence */
+			ambientColor = diffuseColor * glm::vec3(0.2f); 
+			
+			/*  to fill the struct we still have to set the individual uniforms, but this time
+					prefixed with the struct’s name: */
+			exhibit_cubeMultyLightColourShader.setVec3("light.ambient", ambientColor);
+			exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", diffuseColor);
+			exhibit_cubeMultyLightColourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+			/* material properties */
+			exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+			exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+
+			/* specular lighting doesn't have full effect on this object's material */
+			exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f); 
+
+			/* keep the shininess at 32 */
+			exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);			
+
+			/* pass projection matrix to shader (note that in this case it could change every frame) */
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			view = camera.GetViewMatrix();
+			exhibit_cubeMultyLightColourShader.setMat4("projection", projection);
+			exhibit_cubeMultyLightColourShader.setMat4("view", view);
+
+			/* camera/view transformation */
+			/* make sure to initialize matrix to identity matrix first */
+
+			/* world transformation */
+			glm::mat4 exhibit_h_model = glm::mat4(1.0f);
+			exhibit_cubeMultyLightColourShader.setMat4("model", exhibit_h_model);
+
+			exhibit_h_model = glm::mat4(1.0f);
+
+			exhibit_h_model = glm::translate(exhibit_h_model, exhibitsPositions[13]);
+
+			/* rotate the object to on an axis xyz based on the current time */
+			angle = (float) glm::radians(90.0f) * (float)glfwGetTime();
+			exhibit_h_model = glm::rotate(exhibit_h_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+			/* scale the exhibit */
+			exhibit_h_model = glm::scale(exhibit_h_model, glm::vec3(0.75f)); 
+
+			exhibit_cubeMultyLightColourShader.setMat4("model", exhibit_h_model); 
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
 			/* exhibit explanation */
 
 			/* bind Texture */
@@ -905,7 +1155,7 @@ int main(int argc, char const *argv[])
       glBindVertexArray(exhibit_explenations_VAO);
 
       glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, text_texture);
+    	glBindTexture(GL_TEXTURE_2D, text_texture_1);
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, openGL_logo);
 
@@ -924,7 +1174,7 @@ int main(int argc, char const *argv[])
 
 			exhibit_explanation_model = glm::mat4(1.0f);
 
-			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[2]);
+			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[3]);
 			/* rotate the object to on an axis xyz based on the current time */
 			angle = (float) glm::radians(90.0f);
 			exhibit_explanation_model = glm::rotate(exhibit_explanation_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -942,7 +1192,7 @@ int main(int argc, char const *argv[])
       glBindVertexArray(exhibit_explenations_VAO);
 
       glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, text_texture);
+    	glBindTexture(GL_TEXTURE_2D, text_texture_2);
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, openGL_logo);
 
@@ -961,9 +1211,9 @@ int main(int argc, char const *argv[])
 
 			exhibit_explanation_model = glm::mat4(1.0f);
 
-			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[3]);
+			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[2]);
 			/* rotate the object to on an axis xyz based on the current time */
-			angle = (float) glm::radians(90.0f);
+			angle = (float) glm::radians(270.0f);
 			exhibit_explanation_model = glm::rotate(exhibit_explanation_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
 
 			/* scale the exhibit */
@@ -979,7 +1229,7 @@ int main(int argc, char const *argv[])
       glBindVertexArray(exhibit_explenations_VAO);
 
       glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, text_texture);
+    	glBindTexture(GL_TEXTURE_2D, text_texture_3);
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, openGL_logo);
 
@@ -998,7 +1248,7 @@ int main(int argc, char const *argv[])
 
 			exhibit_explanation_model = glm::mat4(1.0f);
 
-			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[6]);
+			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[7]);
 			/* rotate the object to on an axis xyz based on the current time */
 			angle = (float) glm::radians(90.0f);
 			exhibit_explanation_model = glm::rotate(exhibit_explanation_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -1016,7 +1266,7 @@ int main(int argc, char const *argv[])
       glBindVertexArray(exhibit_explenations_VAO);
 
       glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, text_texture);
+    	glBindTexture(GL_TEXTURE_2D, text_texture_4);
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, openGL_logo);
 
@@ -1035,9 +1285,9 @@ int main(int argc, char const *argv[])
 
 			exhibit_explanation_model = glm::mat4(1.0f);
 
-			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[7]);
+			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[6]);
 			/* rotate the object to on an axis xyz based on the current time */
-			angle = (float) glm::radians(90.0f);
+			angle = (float) glm::radians(270.0f);
 			exhibit_explanation_model = glm::rotate(exhibit_explanation_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
 
 			/* scale the exhibit */
@@ -1053,7 +1303,7 @@ int main(int argc, char const *argv[])
       glBindVertexArray(exhibit_explenations_VAO);
 
       glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, text_texture);
+    	glBindTexture(GL_TEXTURE_2D, text_texture_5);
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, openGL_logo);
 
@@ -1072,7 +1322,7 @@ int main(int argc, char const *argv[])
 
 			exhibit_explanation_model = glm::mat4(1.0f);
 
-			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[10]);
+			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[11]);
 			/* rotate the object to on an axis xyz based on the current time */
 			angle = (float) glm::radians(90.0f);
 			exhibit_explanation_model = glm::rotate(exhibit_explanation_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -1089,7 +1339,7 @@ int main(int argc, char const *argv[])
       glBindVertexArray(exhibit_explenations_VAO);
 
       glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, text_texture);
+    	glBindTexture(GL_TEXTURE_2D, text_texture_6);
       glActiveTexture(GL_TEXTURE1);
       glBindTexture(GL_TEXTURE_2D, openGL_logo);
 
@@ -1108,14 +1358,88 @@ int main(int argc, char const *argv[])
 
 			exhibit_explanation_model = glm::mat4(1.0f);
 
-			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[11]);
+			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[10]);
+			/* rotate the object to on an axis xyz based on the current time */
+			angle = (float) glm::radians(270.0f);
+			exhibit_explanation_model = glm::rotate(exhibit_explanation_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+			/* scale the exhibit */
+			exhibit_explanation_model = glm::scale(exhibit_explanation_model, glm::vec3(1.25f)); 
+			exhibit_explanation6Shader.setMat4("model", exhibit_explanation_model);
+
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+			/* exhibit 7 explanation */
+
+			/* bind Texture */
+			exhibit_explanation7Shader.use();
+      glBindVertexArray(exhibit_explenations_VAO);
+
+      glActiveTexture(GL_TEXTURE0);
+    	glBindTexture(GL_TEXTURE_2D, text_texture_7);
+      glActiveTexture(GL_TEXTURE1);
+      glBindTexture(GL_TEXTURE_2D, openGL_logo);
+
+			/* pass projection matrix to shader (note that in this case it could change every frame) */
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			exhibit_explanation7Shader.setMat4("projection", projection);
+
+			/* camera/view transformation */
+			/* make sure to initialize matrix to identity matrix first */
+			view = camera.GetViewMatrix();
+			exhibit_explanation7Shader.setMat4("view", view);
+
+			/* world transformation */
+			exhibit_explanation_model = glm::mat4(1.0f);
+			exhibit_explanation7Shader.setMat4("model", exhibit_explanation_model);
+
+			exhibit_explanation_model = glm::mat4(1.0f);
+
+			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[15]);
 			/* rotate the object to on an axis xyz based on the current time */
 			angle = (float) glm::radians(90.0f);
 			exhibit_explanation_model = glm::rotate(exhibit_explanation_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
 
 			/* scale the exhibit */
 			exhibit_explanation_model = glm::scale(exhibit_explanation_model, glm::vec3(1.25f)); 
-			exhibit_explanation6Shader.setMat4("model", exhibit_explanation_model);
+			exhibit_explanation7Shader.setMat4("model", exhibit_explanation_model);
+
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+			/* exhibit 8 explanation */
+
+			/* bind Texture */
+			exhibit_explanation8Shader.use();
+      glBindVertexArray(exhibit_explenations_VAO);
+
+      glActiveTexture(GL_TEXTURE0);
+    	glBindTexture(GL_TEXTURE_2D, text_texture_8);
+      glActiveTexture(GL_TEXTURE1);
+      glBindTexture(GL_TEXTURE_2D, openGL_logo);
+
+			/* pass projection matrix to shader (note that in this case it could change every frame) */
+			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			exhibit_explanation8Shader.setMat4("projection", projection);
+
+			/* camera/view transformation */
+			/* make sure to initialize matrix to identity matrix first */
+			view = camera.GetViewMatrix();
+			exhibit_explanation8Shader.setMat4("view", view);
+
+			/* world transformation */
+			exhibit_explanation_model = glm::mat4(1.0f);
+			exhibit_explanation8Shader.setMat4("model", exhibit_explanation_model);
+
+			exhibit_explanation_model = glm::mat4(1.0f);
+
+			exhibit_explanation_model = glm::translate(exhibit_explanation_model, exhibitsPositions[14]);
+			/* rotate the object to on an axis xyz based on the current time */
+			angle = (float) glm::radians(270.0f);
+			exhibit_explanation_model = glm::rotate(exhibit_explanation_model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+			/* scale the exhibit */
+			exhibit_explanation_model = glm::scale(exhibit_explanation_model, glm::vec3(1.25f)); 
+			exhibit_explanation8Shader.setMat4("model", exhibit_explanation_model);
 
       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
