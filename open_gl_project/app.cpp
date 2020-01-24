@@ -17,6 +17,7 @@
 #define NR_POINT_LIGHTS 11
 
 // TODO fix error detection and halt code 
+// TODO fix directory detection in both Linux and windows
 
 /* TODO make button prompts in order to change stuff on the exhibits SOS
 //				This can be done by seting the buffers to something other than static draw and change them  
