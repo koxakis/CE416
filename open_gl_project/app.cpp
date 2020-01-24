@@ -17,6 +17,12 @@
 #define NR_POINT_LIGHTS 11
 
 // TODO fix error detection and halt code 
+// TODO make button prompts in order to change stuff on the exhibits SOS
+//				This can be done by seting the buffers to not static draw and change them in the render loop 
+// TODO add which lines of code are affected in any change in the exhibit description   
+// TODO fix lighting and realism  
+// TODO make code more clean
+// TODO update windows implementaion
 
 /* Asserts if the return was false and lunches debug break */
 #define ASSERT(x) if (!(x)) raise(SIGTRAP);
@@ -1015,7 +1021,7 @@ int main(int argc, char const *argv[])
 			/* exhibit 7 cube with basic lighting and revolving colours */
 
 			exhibit_cubeMultyLightColourShader.use();
-			glm::vec3 light_pos_exhibit_7(1.2f,  1.0f, -15.0f);
+			glm::vec3 light_pos_exhibit_7(1.2f,  1.0f, 15.0f);
 
 			exhibit_cubeMultyLightColourShader.setVec3("light.position", light_pos_exhibit_7);
 			exhibit_cubeMultyLightColourShader.setVec3("viewPos", camera.Position);
