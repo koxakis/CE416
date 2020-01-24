@@ -17,12 +17,17 @@
 #define NR_POINT_LIGHTS 11
 
 // TODO fix error detection and halt code 
-// TODO make button prompts in order to change stuff on the exhibits SOS
-//				This can be done by seting the buffers to not static draw and change them in the render loop 
+
+/* TODO make button prompts in order to change stuff on the exhibits SOS
+//				This can be done by seting the buffers to something other than static draw and change them  
+//				in the render loop and by capturing each individual keypresss with proccess_input function
+//				and change the scene accordingly.
+*/
+
 // TODO add which lines of code are affected in any change in the exhibit description   
 // TODO fix lighting and realism  
 // TODO make code more clean
-// TODO update windows implementaion
+// TODO update windows implementation
 
 /* Asserts if the return was false and lunches debug break */
 #define ASSERT(x) if (!(x)) raise(SIGTRAP);
