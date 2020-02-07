@@ -761,6 +761,9 @@ int main(int argc, char const *argv[])
 
 	unsigned int text_texture_7 = loadTexture(FileSystem::getPath("exhibit_explenation_7.jpg").c_str());
 	unsigned int text_texture_8 = loadTexture(FileSystem::getPath("exhibit_explenation_8.jpg").c_str());
+	unsigned int text_texture_8_case1 = loadTexture(FileSystem::getPath("exhibit_explenation_8_case1.jpg").c_str());
+	unsigned int text_texture_8_case2 = loadTexture(FileSystem::getPath("exhibit_explenation_8_case2.jpg").c_str());
+
 
 	unsigned int openGL_logo = loadTexture(FileSystem::getPath("opengl.png").c_str());
 
@@ -1870,10 +1873,38 @@ int main(int argc, char const *argv[])
 			exhibit_explanation8Shader.use();
       glBindVertexArray(exhibit_explenations_VAO);
 
-      glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, text_texture_8);
-      glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, openGL_logo);
+			switch (interact_4_exhibit)
+				{
+					case 0:
+						{
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, text_texture_8);
+							glActiveTexture(GL_TEXTURE1);
+							glBindTexture(GL_TEXTURE_2D, openGL_logo);
+						}
+					break;
+
+					case 1:
+						{
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, text_texture_8_case1);
+							glActiveTexture(GL_TEXTURE1);
+							glBindTexture(GL_TEXTURE_2D, openGL_logo);
+						}
+					break;
+
+					case 2:
+						{
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, text_texture_8_case2);
+							glActiveTexture(GL_TEXTURE1);
+							glBindTexture(GL_TEXTURE_2D, openGL_logo);
+						}
+					break;	
+
+					default:
+						break;
+			}
 
 			/* pass projection matrix to shader (note that in this case it could change every frame) */
 			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
