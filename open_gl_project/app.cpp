@@ -99,6 +99,7 @@ float lastFrame = 0.0f;
 /* exhibit interaction vars */
 int interact_1_exhibit = 0;
 int interact_2_exhibit = 0;
+int interact_2b_exhibit = 0;
 int interact_3_exhibit = 0;
 int interact_4_exhibit = 0;
 
@@ -394,10 +395,10 @@ int main(int argc, char const *argv[])
 	glm::vec3 exhibitsPositions[] = 
 		{
 			/* 0 exhibit 1 triangle basic*/
-			glm::vec3( -1.9f,  0.0f,  1.0f),
+			glm::vec3( -1.9f,  0.0f,  0.0f),
 
 			/* 1 exhibit 2 square basic*/
-			glm::vec3( 1.9f,  0.0f,  1.0f),
+			glm::vec3( 1.9f,  0.0f,  0.0f),
 
 			/* 2 exhibit 2 explanation */
 			glm::vec3( 1.9f,  0.0f,  -1.5f),
@@ -740,12 +741,24 @@ int main(int argc, char const *argv[])
 	unsigned int specularMap_celling = loadTexture(FileSystem::getPath("celling2.jpg").c_str());
 
 	/* Load textures for explenations */
-	unsigned int text_texture_1 = loadTexture(FileSystem::getPath("exhibit_explenation_1.jpg").c_str());
-	unsigned int text_texture_2 = loadTexture(FileSystem::getPath("exhibit_explenation_2.jpg").c_str());
+	/* Texture of the 1st explenation changes to reflect code changes */
+	unsigned int text_texture_1_red = loadTexture(FileSystem::getPath("exhibit_explenation_1_red.jpg").c_str());
+	unsigned int text_texture_1_green = loadTexture(FileSystem::getPath("exhibit_explenation_1_green.jpg").c_str());
+	unsigned int text_texture_1_blue = loadTexture(FileSystem::getPath("exhibit_explenation_1_blue.jpg").c_str());
+
+	unsigned int text_texture_2_red = loadTexture(FileSystem::getPath("exhibit_explenation_2_red.jpg").c_str());
+	unsigned int text_texture_2_green = loadTexture(FileSystem::getPath("exhibit_explenation_2_green.jpg").c_str());
+	unsigned int text_texture_2_blue = loadTexture(FileSystem::getPath("exhibit_explenation_2_blue.jpg").c_str());
+
 	unsigned int text_texture_3 = loadTexture(FileSystem::getPath("exhibit_explenation_3.jpg").c_str());
 	unsigned int text_texture_4 = loadTexture(FileSystem::getPath("exhibit_explenation_4.jpg").c_str());
+
 	unsigned int text_texture_5 = loadTexture(FileSystem::getPath("exhibit_explenation_5.jpg").c_str());
+	unsigned int text_texture_5_swap = loadTexture(FileSystem::getPath("exhibit_explenation_5_swap.jpg").c_str());
+
 	unsigned int text_texture_6 = loadTexture(FileSystem::getPath("exhibit_explenation_6.jpg").c_str());
+	unsigned int text_texture_6_swap = loadTexture(FileSystem::getPath("exhibit_explenation_6_swap.jpg").c_str());
+
 	unsigned int text_texture_7 = loadTexture(FileSystem::getPath("exhibit_explenation_7.jpg").c_str());
 	unsigned int text_texture_8 = loadTexture(FileSystem::getPath("exhibit_explenation_8.jpg").c_str());
 
@@ -813,6 +826,7 @@ int main(int argc, char const *argv[])
 
 	/* Uncomment this call to draw in wireframe polygons. */
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	/* render loop */
 	while (!glfwWindowShouldClose(window))
 		{
@@ -954,6 +968,25 @@ int main(int argc, char const *argv[])
 			/* Scale the exhibit */
 			exhibit_b_model = glm::scale(exhibit_b_model, glm::vec3(1.25f)); 
 			exhibit_squareShader.setMat4("model", exhibit_b_model);
+
+			/* Change the polygon draw mode from normal rasterasation (GL_FILL) to wireframe mode (GL_LINE) */
+			switch (interact_2b_exhibit)
+				{
+					case 0:
+						{
+							glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);				
+						}
+					break;
+
+					case 1:
+						{
+							glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);				
+						}
+					break;
+			
+					default:
+					break;
+			}
 
 			/* Change the exhibits colour based on button press */
 			/* As well as the colour of the source code in the description by changing the description texture */
@@ -1192,55 +1225,114 @@ int main(int argc, char const *argv[])
 			/* Exhibit 7 cube with basic lighting and revolving colours */
 
 			exhibit_cubeMultyLightColourShader.use();
+			/* Set a new local to the exhibit light source */
 			glm::vec3 light_pos_exhibit_7(1.2f,  1.0f, -15.0f);
 
 			exhibit_cubeMultyLightColourShader.setVec3("light.position", light_pos_exhibit_7);
 			exhibit_cubeMultyLightColourShader.setVec3("viewPos", camera.Position);
 
 			/* Light properties */
-			/* Light properties change over time basted on current time and a sin*/
 			glm::vec3 lightColor;
+			glm::vec3 diffuseColor;
+			glm::vec3 ambientColor;
 			switch (interact_4_exhibit)
 				{
-					case 0 :
-					{
-						lightColor.x = sin(glfwGetTime() * 2.0f);
-						lightColor.y = sin(glfwGetTime() * 0.7f);
-						lightColor.z = sin(glfwGetTime() * 1.3f);
-					}
+					/* Change colour and material properties based on the sin of the current time */
+					case 0:
+						{
+							lightColor.x = sin(glfwGetTime() * 2.0f);
+							lightColor.y = sin(glfwGetTime() * 0.7f);
+							lightColor.z = sin(glfwGetTime() * 1.3f);
+							/* Decrease the influence */
+							diffuseColor = lightColor   * glm::vec3(0.5f); 
+							/* Low influence */
+							ambientColor = diffuseColor * glm::vec3(0.2f); 
+							
+							/* light properties */
+							exhibit_cubeMultyLightColourShader.setVec3("light.ambient", ambientColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", diffuseColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+							/* Material properties */
+							exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+
+							/* Specular lighting doesn't have full effect on this object's material */
+							exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f); 
+
+							/* Keep the shininess at 32 */
+							exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);		
+						}
 					break;
-					
+					/* Set the colour and material properties to a set level */
 					case 1:
-					{
-						lightColor.x = 2.0f;
-						lightColor.y = 0.7f;
-						lightColor.z = 1.3f;						
-					}
-			
-					default:
+						{
+							lightColor.x = 2.0f;
+							lightColor.y = 1.0f;
+							lightColor.z = 0.5f;
+
+							/* light properties */
+							exhibit_cubeMultyLightColourShader.setVec3("light.ambient",	lightColor); 
+							exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", lightColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+							/* Material properties */
+							exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 0.0f, 0.1f, 0.06f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 0.0f, 0.50980392f, 0.50980392f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.50196078f, 0.50196078f, 0.50196078f);
+							exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);
+						}
 					break;
-			}
+					case 2:
+						{
+							lightColor.x = 0.5f;
+							lightColor.y = 1.0f;
+							lightColor.z = 2.0f;
 
-			/* Decrease the influence */
-			glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); 
-			/* Low influence */
-			glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); 
-			
-			/*  To fill the struct we still have to set the individual uniforms, but this time
-					prefixed with the struct’s name: */
-			exhibit_cubeMultyLightColourShader.setVec3("light.ambient", ambientColor);
-			exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", diffuseColor);
-			exhibit_cubeMultyLightColourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+							/* Decrease the influence */
+							diffuseColor = lightColor   * glm::vec3(0.5f); 
+							/* Low influence */
+							ambientColor = diffuseColor * glm::vec3(0.5f); 
+							
+							/* light properties */
+							exhibit_cubeMultyLightColourShader.setVec3("light.ambient", ambientColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", diffuseColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.specular", 0.5f, 0.5f, 0.5f);
 
-			/* Material properties */
-			exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-			exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+							/* Material properties */
+							exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 0.0f, 0.1f, 0.06f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 0.0f, 0.50980392f, 0.50980392f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.50196078f, 0.50196078f, 0.50196078f);
+							exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);
+						}
+					break;
+					default:
+						{
+							lightColor.x = sin(glfwGetTime() * 2.0f);
+							lightColor.y = sin(glfwGetTime() * 0.7f);
+							lightColor.z = sin(glfwGetTime() * 1.3f);
+							/* Decrease the influence */
+							diffuseColor = lightColor   * glm::vec3(0.5f); 
+							/* Low influence */
+							ambientColor = diffuseColor * glm::vec3(0.2f); 
+							
+							/* light properties */
+							exhibit_cubeMultyLightColourShader.setVec3("light.ambient", ambientColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", diffuseColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
-			/* Specular lighting doesn't have full effect on this object's material */
-			exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f); 
+							/* Material properties */
+							exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
 
-			/* Keep the shininess at 32 */
-			exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);			
+							/* Specular lighting doesn't have full effect on this object's material */
+							exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f); 
+
+							/* Keep the shininess at 32 */
+							exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);	
+						}
+					break;
+			}	
 
 			/* Pass projection matrix to shader (note that in this case it could change every frame) */
 			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -1289,50 +1381,105 @@ int main(int argc, char const *argv[])
 			exhibit_cubeMultyLightColourShader.setVec3("viewPos", camera.Position);
 
 			/* Light properties */
-			/* Light properties change over time basted on current time and a sin*/
 			switch (interact_4_exhibit)
 				{
 					/* Change colour and material properties based on the sin of the current time */
 					case 0 :
-					{
-						lightColor.x = sin(glfwGetTime() * 2.0f);
-						lightColor.y = sin(glfwGetTime() * 0.7f);
-						lightColor.z = sin(glfwGetTime() * 1.3f);
-					}
-					break;
+						{
+							lightColor.x = sin(glfwGetTime() * 2.0f);
+							lightColor.y = sin(glfwGetTime() * 0.7f);
+							lightColor.z = sin(glfwGetTime() * 1.3f);
+							/* Decrease the influence */
+							diffuseColor = lightColor   * glm::vec3(0.5f); 
+							/* Low influence */
+							ambientColor = diffuseColor * glm::vec3(0.2f); 
+							
+							/* light properties */
+							exhibit_cubeMultyLightColourShader.setVec3("light.ambient", ambientColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", diffuseColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
+							/* Material properties */
+							exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+
+							/* Specular lighting doesn't have full effect on this object's material */
+							exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f); 
+
+							/* Keep the shininess at 32 */
+							exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);		
+						}
+					break;
 					/* Set the colour and material properties to a set level */
 					case 1:
-					{
-						lightColor.x = 2.0f;
-						lightColor.y = 0.7f;
-						lightColor.z = 1.3f;						
-					}
-			
-					default:
+						{
+							lightColor.x = 2.0f;
+							lightColor.y = 1.0f;
+							lightColor.z = 0.5f;
+
+							/* light properties */
+							exhibit_cubeMultyLightColourShader.setVec3("light.ambient",	lightColor); 
+							exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", lightColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+							/* Material properties */
+							exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 0.0f, 0.1f, 0.06f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 0.0f, 0.50980392f, 0.50980392f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.50196078f, 0.50196078f, 0.50196078f);
+							exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);
+						}
 					break;
-			}
+					case 2:
+						{
+							lightColor.x = 0.5f;
+							lightColor.y = 1.0f;
+							lightColor.z = 2.0f;
 
-			/* Decrease the influence of deffuse effect */
-			diffuseColor = lightColor   * glm::vec3(0.5f); 
-			/* Low influence of ambient light*/
-			ambientColor = diffuseColor * glm::vec3(0.2f); 
-			
-			/*  To fill the struct we still have to set the individual uniforms, but this time
-					prefixed with the struct’s name: */
-			exhibit_cubeMultyLightColourShader.setVec3("light.ambient", ambientColor);
-			exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", diffuseColor);
-			exhibit_cubeMultyLightColourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+							/* Decrease the influence */
+							diffuseColor = lightColor   * glm::vec3(0.5f); 
+							/* Low influence */
+							ambientColor = diffuseColor * glm::vec3(0.2f); 
+							
+							/* light properties */
+							exhibit_cubeMultyLightColourShader.setVec3("light.ambient", ambientColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", diffuseColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.specular", 0.5f, 0.5f, 0.5f);
 
-			/* Material properties */
-			exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-			exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+							/* Material properties */
+							exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 0.0f, 0.1f, 0.06f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 0.0f, 0.50980392f, 0.50980392f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.50196078f, 0.50196078f, 0.50196078f);
+							exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);
+						}
+					break;
+					default:
+						{
+							lightColor.x = sin(glfwGetTime() * 2.0f);
+							lightColor.y = sin(glfwGetTime() * 0.7f);
+							lightColor.z = sin(glfwGetTime() * 1.3f);
+							/* Decrease the influence */
+							diffuseColor = lightColor   * glm::vec3(0.5f); 
+							/* Low influence */
+							ambientColor = diffuseColor * glm::vec3(0.2f); 
+							
+							/*  To fill the struct we still have to set the individual uniforms, but this time
+									prefixed with the struct’s name: */
+							exhibit_cubeMultyLightColourShader.setVec3("light.ambient", ambientColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.diffuse", diffuseColor);
+							exhibit_cubeMultyLightColourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
-			/* Specular lighting doesn't have full effect on this object's material */
-			exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f); 
+							/* Material properties */
+							exhibit_cubeMultyLightColourShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+							exhibit_cubeMultyLightColourShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
 
-			/* Keep the shininess at 32 */
-			exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);			
+							/* Specular lighting doesn't have full effect on this object's material */
+							exhibit_cubeMultyLightColourShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f); 
+
+							/* Keep the shininess at 32 */
+							exhibit_cubeMultyLightColourShader.setFloat("material.shininess", 32.0f);	
+						}
+					break;
+			}	
 
 			/* Pass projection matrix to shader (note that in this case it could change every frame) */
 			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -1366,11 +1513,39 @@ int main(int argc, char const *argv[])
 			/* Bind Texture */
 			exhibit_explanationShader.use();
       glBindVertexArray(exhibit_explenations_VAO);
+			/* Change the exhibits explenation based on button press the changed code reflex the change in the source code */
+			switch (interact_1_exhibit)
+				{
+					case 0:
+						{
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, text_texture_1_red);
+							glActiveTexture(GL_TEXTURE1);
+							glBindTexture(GL_TEXTURE_2D, openGL_logo);
+						}
+					break;
 
-      glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, text_texture_1);
-      glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, openGL_logo);
+					case 1:
+						{
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, text_texture_1_green);
+							glActiveTexture(GL_TEXTURE1);
+							glBindTexture(GL_TEXTURE_2D, openGL_logo);
+						}
+					break;
+
+					case 2:
+						{
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, text_texture_1_blue);
+							glActiveTexture(GL_TEXTURE1);
+							glBindTexture(GL_TEXTURE_2D, openGL_logo);
+						}
+					break;	
+
+					default:
+						break;
+			}
 
 			/* Pass projection matrix to shader (note that in this case it could change every frame) */
 			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -1404,11 +1579,40 @@ int main(int argc, char const *argv[])
 			exhibit_explanation2Shader.use();
       glBindVertexArray(exhibit_explenations_VAO);
 
-      glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, text_texture_2);
-      glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, openGL_logo);
+			/* Change the exhibits colour based on button press */
+			/* As well as the colour of the source code in the description by changing the description texture */
+			switch (interact_2_exhibit)
+				{
+					case 0:
+						{
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, text_texture_2_red);
+							glActiveTexture(GL_TEXTURE1);
+							glBindTexture(GL_TEXTURE_2D, openGL_logo);
+						}
+					break;
 
+					case 1:
+						{
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, text_texture_2_green);
+							glActiveTexture(GL_TEXTURE1);
+							glBindTexture(GL_TEXTURE_2D, openGL_logo);
+						}
+					break;
+
+					case 2:
+						{
+							glActiveTexture(GL_TEXTURE0);
+							glBindTexture(GL_TEXTURE_2D, text_texture_2_blue);
+							glActiveTexture(GL_TEXTURE1);
+							glBindTexture(GL_TEXTURE_2D, openGL_logo);
+						}
+					break;	
+
+					default:
+						break;
+			}
 			/* Pass projection matrix to shader (note that in this case it could change every frame) */
 			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 			exhibit_explanation2Shader.setMat4("projection", projection);
@@ -1515,10 +1719,30 @@ int main(int argc, char const *argv[])
 			exhibit_explanation5Shader.use();
       glBindVertexArray(exhibit_explenations_VAO);
 
-      glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, text_texture_5);
-      glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, openGL_logo);
+			/* Change textures here */
+			switch (interact_3_exhibit)
+				{
+					case 0:
+					{ 
+						glActiveTexture(GL_TEXTURE0);
+						glBindTexture(GL_TEXTURE_2D, text_texture_5);
+						glActiveTexture(GL_TEXTURE1);
+						glBindTexture(GL_TEXTURE_2D, openGL_logo);
+					}
+					break;
+
+					case 1:
+					{
+						glActiveTexture(GL_TEXTURE0);
+						glBindTexture(GL_TEXTURE_2D, text_texture_5_swap);
+						glActiveTexture(GL_TEXTURE1);
+						glBindTexture(GL_TEXTURE_2D, openGL_logo);
+					}
+					break;
+			
+					default:
+						break;
+				}
 
 			/* pass projection matrix to shader (note that in this case it could change every frame) */
 			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -1545,16 +1769,37 @@ int main(int argc, char const *argv[])
 			exhibit_explanation5Shader.setMat4("model", exhibit_explanation_model);
 
       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 			/* exhibit 6 explanation */
 
 			/* bind Texture */
 			exhibit_explanation6Shader.use();
       glBindVertexArray(exhibit_explenations_VAO);
 
-      glActiveTexture(GL_TEXTURE0);
-    	glBindTexture(GL_TEXTURE_2D, text_texture_6);
-      glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, openGL_logo);
+			/* Change textures here */
+			switch (interact_3_exhibit)
+				{
+					case 0:
+					{ 
+						glActiveTexture(GL_TEXTURE0);
+						glBindTexture(GL_TEXTURE_2D, text_texture_6);
+						glActiveTexture(GL_TEXTURE1);
+						glBindTexture(GL_TEXTURE_2D, openGL_logo);
+					}
+					break;
+
+					case 1:
+					{
+						glActiveTexture(GL_TEXTURE0);
+						glBindTexture(GL_TEXTURE_2D, text_texture_6_swap);
+						glActiveTexture(GL_TEXTURE1);
+						glBindTexture(GL_TEXTURE_2D, openGL_logo);
+					}
+					break;
+			
+					default:
+						break;
+				}
 
 			/* pass projection matrix to shader (note that in this case it could change every frame) */
 			projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -2015,6 +2260,16 @@ void processInput(GLFWwindow *window)
 			{
 			}
 		}
+	
+	/* exhibit 2 interaction */
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+		{
+			interact_2b_exhibit = (interact_2b_exhibit + 1 ) % 3 ;
+			for(int i=0; i < 21474836; i++)
+			{
+			}
+		}
+
 	/* exhibit 3+4 interaction */
 	if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS)
 		{
@@ -2026,7 +2281,7 @@ void processInput(GLFWwindow *window)
 	/* exhibit 7+8 interaction */
 	if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
 		{
-			interact_4_exhibit = (interact_4_exhibit +1 ) % 2;
+			interact_4_exhibit = (interact_4_exhibit +1 ) % 3;
 			for(int i=0; i < 21474836; i++)
 			{
 			}
@@ -2078,7 +2333,9 @@ unsigned int loadTexture(char const * path)
 					format = GL_RGBA;
 
 			glBindTexture(GL_TEXTURE_2D, textureID);
+
 			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+
 			glGenerateMipmap(GL_TEXTURE_2D);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
