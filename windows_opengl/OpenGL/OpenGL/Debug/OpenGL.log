@@ -1,2 +1,85 @@
-﻿LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿  Application.cpp
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(838,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1246,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1247,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1248,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1314,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1315,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1316,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1392,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1393,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1394,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1460,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1461,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1462,22): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1975,134): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1975,101): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1975,68): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1987,47): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(1990,48): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2071,138): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2071,104): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2071,70): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2083,48): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2086,49): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2164,146): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2164,110): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2164,74): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2176,50): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2179,51): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2327,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2328,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2332,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2333,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2335,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2336,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\git_repos\CE416\windows_opengl\OpenGL\OpenGL\src\Application.cpp(2344,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   OpenGL.vcxproj -> D:\git_repos\CE416\windows_opengl\OpenGL\Debug\OpenGL.exe

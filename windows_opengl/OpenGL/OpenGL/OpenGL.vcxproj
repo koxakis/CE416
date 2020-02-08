@@ -137,20 +137,48 @@
   <ItemGroup>
     <None Include="res\shaders\celling_shader.fs" />
     <None Include="res\shaders\celling_shader.vs" />
+    <None Include="res\shaders\exhibit_5_texture.fs" />
+    <None Include="res\shaders\exhibit_5_texture.vs" />
+    <None Include="res\shaders\exhibit_7_light_colour.fs" />
+    <None Include="res\shaders\exhibit_7_light_colour.vs" />
     <None Include="res\shaders\floor_shader.fs" />
     <None Include="res\shaders\floor_shader.vs" />
     <None Include="res\shaders\lamp.fs" />
     <None Include="res\shaders\lamp.vs" />
     <None Include="res\shaders\Shader_basic.shader" />
+    <None Include="res\shaders\square.fs" />
+    <None Include="res\shaders\square.vs" />
+    <None Include="res\shaders\triangle.fs" />
+    <None Include="res\shaders\triangle.vs" />
     <None Include="res\shaders\wall_shader.fs" />
     <None Include="res\shaders\wall_shader.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\awesomeface.jpg" />
     <Image Include="res\celling.jpg" />
     <Image Include="res\celling2.jpg" />
     <Image Include="res\celling2_defuse.jpg" />
     <Image Include="res\concrete.jpg" />
+    <Image Include="res\container2.png" />
+    <Image Include="res\exhibit_explenation_1.jpg" />
+    <Image Include="res\exhibit_explenation_1_blue.jpg" />
+    <Image Include="res\exhibit_explenation_1_green.jpg" />
+    <Image Include="res\exhibit_explenation_1_red.jpg" />
+    <Image Include="res\exhibit_explenation_2_blue.jpg" />
+    <Image Include="res\exhibit_explenation_2_green.jpg" />
+    <Image Include="res\exhibit_explenation_2_red.jpg" />
+    <Image Include="res\exhibit_explenation_3.jpg" />
+    <Image Include="res\exhibit_explenation_4.jpg" />
+    <Image Include="res\exhibit_explenation_5.jpg" />
+    <Image Include="res\exhibit_explenation_5_swap.jpg" />
+    <Image Include="res\exhibit_explenation_6.jpg" />
+    <Image Include="res\exhibit_explenation_6_swap.jpg" />
+    <Image Include="res\exhibit_explenation_7.jpg" />
+    <Image Include="res\exhibit_explenation_8.jpg" />
+    <Image Include="res\exhibit_explenation_8_case1.jpg" />
+    <Image Include="res\exhibit_explenation_8_case2.jpg" />
     <Image Include="res\gray.jpg" />
+    <Image Include="res\opengl.png" />
     <Image Include="res\Wooden_Wall.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
