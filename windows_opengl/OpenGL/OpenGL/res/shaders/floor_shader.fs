@@ -1,6 +1,6 @@
 #version 460 core
 out vec4 FragColor;
-#define NR_POINT_LIGHTS 11
+#define NR_POINT_LIGHTS 5
 
 struct Material 
 	{

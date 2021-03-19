@@ -14,7 +14,7 @@ App
 *.pch
 
 # Compiled Dynamic libraries
-*.so
+#*.so
 *.dylib
 *.dll
 
@@ -23,11 +23,11 @@ App
 *.smod
 
 # Compiled Static libraries
-*.lai
-*.la
-*.a
+#*.lai
+#*.la
+#*.a
 
 # Executables
-*.exe
+#*.exe
 *.out
 *.app
